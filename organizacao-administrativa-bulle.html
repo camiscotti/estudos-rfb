@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  TEMPLATE BULLE INTELIGENTE — NÃO ALTERAR CSS, ESTRUTURA NEM CORES.
+  ============================================================================
+  Como usar (para o Claude que estiver gerando o material):
+  1. COPIE este arquivo inteiro. NÃO mude nada dentro de <style> nem o motor
+     de JS no final. As cores, o layout e os componentes são FIXOS.
+  2. Substitua apenas os marcadores {{...}} e o conteúdo entre
+     <!-- INICIO CONTEUDO --> e <!-- FIM CONTEUDO -->.
+  3. Preencha os arrays JS no bloco DADOS (NAV, CHECKLIST, QUIZ). O motor
+     renderiza a navegação, o Checklist do Uber e o quiz automaticamente a
+     partir deles — você NÃO escreve o HTML repetitivo dessas seções à mão.
+  4. As seções de conteúdo (item 4 da estrutura) você escreve como HTML,
+     usando as classes-componente documentadas em references/componentes.md.
+  ============================================================================
+-->
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Organização Administrativa · Bulle Inteligente</title>
+<style>
+  :root{
+    --laranja:#E06F23;
+    --laranja-escuro:#C25E18;
+    --laranja-detalhe:#B85417;
+    --pessego:#FBE3CF;
+    --navy:#0B2432;
+    --navy-grad:#123243;
+    --grafite:#2A2320;
+    --creme-banca:#FCF6E3;
+    --creme-revisao:#FCEBDD;
+    --branco:#ffffff;
+    --cinza-linha:#ece4dc;
+    --zebra:#faf5ef;
+    --verde:#2e7d4f;
+    --verde-bg:#e5f4ea;
+    --vermelho:#c0392b;
+    --vermelho-bg:#fbe9e7;
+    --serif:Georgia,'Times New Roman',serif;
+    --sans:'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:var(--serif);
+    color:var(--grafite);
+    background:#fdfbf8;
+    line-height:1.7;
+    font-size:17px;
+  }
+  a{color:inherit;}
+
+  /* ---------- 1. NAV (azul-marinho) ---------- */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    background:linear-gradient(90deg,var(--navy),var(--navy-grad));
+    color:#eaf1f5;
+    display:flex;align-items:center;gap:6px;
+    padding:10px 18px;
+    flex-wrap:wrap;
+    box-shadow:0 2px 14px rgba(0,0,0,.18);
+  }
+  .nav .brand{
+    font-family:var(--sans);font-weight:700;letter-spacing:.5px;
+    color:#fff;margin-right:14px;font-size:15px;white-space:nowrap;
+  }
+  .nav .brand b{color:var(--laranja);}
+  .nav-links{display:flex;gap:4px;flex-wrap:wrap;flex:1;}
+  .nav-links a{
+    font-family:var(--sans);font-size:12.5px;text-decoration:none;
+    color:#cfe0ea;padding:6px 11px;border-radius:20px;
+    transition:.15s;white-space:nowrap;
+  }
+  .nav-links a:hover{background:rgba(224,111,35,.22);color:#fff;}
+  .nav .immersion{
+    font-family:var(--sans);font-size:12.5px;cursor:pointer;
+    background:var(--laranja);color:#fff;border:none;
+    padding:7px 14px;border-radius:20px;font-weight:600;white-space:nowrap;
+    transition:.15s;
+  }
+  .nav .immersion:hover{background:var(--laranja-escuro);}
+
+  /* ---------- layout ---------- */
+  .wrap{max-width:860px;margin:0 auto;padding:0 22px 90px;}
+
+  /* ---------- 2. Cabeçalho ---------- */
+  .header{text-align:center;padding:46px 10px 30px;}
+  .header .logo{
+    font-family:var(--serif);font-size:30px;font-weight:700;
+    color:var(--laranja);letter-spacing:.5px;
+  }
+  .header .sub{
+    font-family:var(--sans);font-size:11px;letter-spacing:3px;
+    color:#8a7d72;margin-top:6px;text-transform:uppercase;
+  }
+  .tag{
+    display:inline-block;font-family:var(--sans);font-size:11px;
+    letter-spacing:2.5px;color:var(--laranja);text-transform:uppercase;
+    margin:26px 0 10px;font-weight:700;
+  }
+  .header h1{
+    font-family:var(--serif);font-size:30px;line-height:1.25;
+    margin:6px auto 0;max-width:720px;color:var(--grafite);
+  }
+
+  /* ---------- badges de bloco ---------- */
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:1px;
+    background:var(--laranja);color:#fff;text-transform:uppercase;
+    padding:8px 16px;border-radius:8px;margin:0 0 4px;
+  }
+
+  /* ---------- 3. Como estudar ---------- */
+  .quote-box{
+    border-left:4px solid var(--laranja);
+    background:#fff;border-radius:0 10px 10px 0;
+    padding:20px 24px;margin:16px 0 8px;font-style:italic;
+    box-shadow:0 2px 10px rgba(0,0,0,.04);color:#4a4038;
+  }
+  .quote-box::before{content:"\201C";color:var(--pessego);
+    font-size:52px;font-family:Georgia;line-height:0;vertical-align:-18px;margin-right:6px;}
+
+  /* ---------- 4. Seções de conteúdo ---------- */
+  .secao{
+    border-left:4px solid var(--laranja);
+    padding:4px 0 4px 22px;margin:40px 0;
+  }
+  .secao > h2{
+    font-family:var(--serif);color:var(--laranja);font-size:24px;
+    margin:0 0 4px;padding-bottom:10px;
+    border-bottom:2px solid var(--cinza-linha);
+  }
+  .secao > h2 .lei{font-family:var(--sans);font-size:13px;color:#9a8b7d;font-weight:400;}
+  .secao p{margin:14px 0;}
+  .dropcap::first-letter{
+    font-family:var(--serif);float:left;color:var(--laranja);
+    font-size:62px;line-height:.8;padding:6px 10px 0 0;font-weight:700;
+  }
+  .secao h3{font-family:var(--serif);color:var(--laranja-detalhe);font-size:18px;margin:22px 0 6px;}
+  .secao ul{margin:12px 0;padding-left:22px;}
+  .secao li{margin:8px 0;}
+  .secao li b, .secao p b{color:var(--grafite);}
+  mark{background:var(--pessego);color:var(--grafite);padding:1px 5px;border-radius:4px;}
+
+  /* macete / mnemônico */
+  .macete{
+    background:#fff;border:1.5px dashed var(--laranja);
+    border-radius:10px;padding:12px 16px;margin:16px 0;
+    font-family:var(--serif);
+  }
+  .macete .pill{
+    display:inline-block;font-family:'Courier New',monospace;font-weight:700;
+    background:var(--laranja-escuro);color:#fff;padding:3px 10px;border-radius:6px;
+    margin-right:8px;font-size:14px;
+  }
+  .macete b{color:var(--laranja-detalhe);}
+
+  /* nota de jurisprudência */
+  .nota-juris{
+    font-style:italic;color:#5a4f45;background:#fbf7f2;
+    border-left:3px solid var(--pessego);padding:10px 16px;margin:14px 0;border-radius:0 8px 8px 0;
+  }
+
+  /* Caixa "Como a banca derruba" — assinatura */
+  .banca{
+    background:var(--creme-banca);border:1px solid #eadfba;
+    border-radius:10px;padding:14px 18px;margin:18px 0;
+  }
+  .banca .titulo{
+    font-family:var(--sans);font-weight:700;color:var(--laranja-detalhe);
+    font-size:13px;letter-spacing:.5px;margin-bottom:6px;
+  }
+  .banca .correcao{margin-top:8px;padding-top:8px;border-top:1px dashed #e0d4a8;}
+  .banca .correcao b{color:var(--verde);}
+
+  /* ---------- tabelas ---------- */
+  table.comp{width:100%;border-collapse:collapse;margin:16px 0;font-size:15.5px;
+    box-shadow:0 2px 12px rgba(0,0,0,.05);border-radius:10px;overflow:hidden;font-family:var(--sans);}
+  table.comp caption{
+    caption-side:top;text-align:left;font-family:var(--serif);font-weight:700;
+    color:var(--laranja-detalhe);font-size:16px;margin-bottom:8px;
+  }
+  table.comp th{background:var(--laranja);color:#fff;padding:11px 14px;text-align:left;font-weight:600;}
+  table.comp td{padding:11px 14px;border-top:1px solid var(--cinza-linha);vertical-align:top;}
+  table.comp tbody tr:nth-child(even){background:var(--zebra);}
+  table.comp td:first-child{font-weight:700;color:var(--grafite);}
+  table.comp .dif{background:var(--pessego);font-weight:700;}
+
+  /* ---------- 6. Revisão rápida ---------- */
+  .revisao{background:#fff;border-radius:12px;padding:22px 24px;margin:16px 0;
+    box-shadow:0 2px 12px rgba(0,0,0,.05);}
+  .revisao h3{font-family:var(--serif);color:var(--laranja);font-size:18px;margin:20px 0 6px;}
+  .revisao h3:first-child{margin-top:0;}
+  .revisao ul{padding-left:20px;margin:8px 0;}
+  .revisao li{margin:7px 0;}
+  .pegadinhas-foco{
+    background:var(--creme-revisao);border-radius:10px;padding:16px 20px;margin-top:20px;
+    border:1px solid #f2d9c4;
+  }
+  .pegadinhas-foco .titulo{font-family:var(--sans);font-weight:700;color:var(--laranja-detalhe);
+    letter-spacing:.5px;margin-bottom:8px;font-size:13px;}
+
+  /* ---------- 7. Checklist do Uber ---------- */
+  .intro{color:#6a5f54;font-style:italic;margin:10px 0 18px;}
+  #checklist{display:grid;gap:10px;}
+  .card-check{
+    display:flex;gap:14px;align-items:center;background:#fff;border-radius:10px;
+    padding:12px 16px;box-shadow:0 1px 8px rgba(0,0,0,.05);border-left:3px solid var(--laranja);
+  }
+  .card-check .num{
+    font-family:'Courier New',monospace;font-weight:700;color:#fff;background:var(--laranja);
+    min-width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;
+  }
+  .card-check .txt{font-size:15.5px;}
+
+  /* ---------- 8. Fixação / quiz ---------- */
+  .timer{display:inline-block;font-family:'Courier New',monospace;background:var(--navy);color:#fff;
+    padding:6px 14px;border-radius:8px;margin:4px 0 14px;font-size:15px;}
+  .card-q{background:#fff;border-radius:12px;padding:18px 20px;margin:14px 0;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);border:1px solid #f0e8e0;}
+  .card-q.acertou{border-color:var(--verde);}
+  .card-q.errou{border-color:var(--vermelho);}
+  .card-q .rot{font-family:var(--sans);font-size:12px;letter-spacing:1px;color:var(--laranja);
+    font-weight:700;text-transform:uppercase;}
+  .card-q .enun{margin:8px 0 14px;}
+  .card-q .btns{display:flex;gap:10px;}
+  .card-q .btns button{
+    font-family:var(--sans);font-weight:700;cursor:pointer;border:2px solid var(--cinza-linha);
+    background:#fff;padding:9px 20px;border-radius:8px;font-size:14px;transition:.12s;color:var(--grafite);
+  }
+  .card-q .btns button:hover{border-color:var(--laranja);}
+  .card-q .btns button.sel-certo{background:var(--verde-bg);border-color:var(--verde);color:var(--verde);}
+  .card-q .btns button.sel-errado{background:var(--vermelho-bg);border-color:var(--vermelho);color:var(--vermelho);}
+  .card-q .btns button:disabled{cursor:default;opacity:.85;}
+  .card-q .exp{display:none;margin-top:14px;padding:12px 16px;border-radius:8px;font-size:15px;
+    background:#faf6f1;border-left:3px solid var(--laranja);}
+  .card-q .exp.show{display:block;}
+  .card-q .exp .verdict{font-family:var(--sans);font-weight:700;font-size:13px;margin-bottom:4px;}
+  .card-q .exp .gab{color:#5a4f45;}
+  .refazer{font-family:var(--sans);font-weight:700;cursor:pointer;background:var(--laranja);color:#fff;
+    border:none;padding:11px 22px;border-radius:8px;margin-top:16px;font-size:14px;}
+  .refazer:hover{background:var(--laranja-escuro);}
+  .placar{font-family:var(--sans);font-weight:700;color:var(--laranja-detalhe);margin-top:14px;}
+
+  /* ---------- 9. Explica pra criança ---------- */
+  .feynman{background:#fffaf4;border:2px solid var(--pessego);border-radius:14px;padding:24px 26px;margin:16px 0;}
+  .feynman ul{list-style:none;padding:0;margin:0;}
+  .feynman li{margin:16px 0;padding-left:26px;position:relative;font-size:17px;line-height:1.8;}
+  .feynman li::before{content:"\1F5E3";position:absolute;left:0;top:2px;font-size:15px;}
+  .feynman li b{color:var(--laranja-detalhe);}
+  .feynman .resumo{margin-top:20px;padding:14px 18px;background:var(--pessego);border-radius:10px;
+    font-weight:700;font-style:italic;color:var(--grafite);}
+
+  /* ---------- 10. Concluir ---------- */
+  .concluir{text-align:center;padding:40px 10px 10px;}
+  .concluir p{color:#6a5f54;font-style:italic;}
+  .btn-concluir{font-family:var(--sans);font-weight:700;cursor:pointer;background:var(--laranja);color:#fff;
+    border:none;padding:14px 30px;border-radius:10px;font-size:15px;margin:10px 0;transition:.15s;}
+  .btn-concluir:hover{background:var(--laranja-escuro);}
+  .btn-concluir.feito{background:var(--verde);}
+  .assinatura{font-family:var(--serif);color:var(--laranja);letter-spacing:2px;margin-top:24px;font-size:15px;}
+
+  /* ---------- Modo imersão ---------- */
+  body.imersao .nav-links{display:none;}
+  body.imersao .wrap{max-width:940px;}
+
+  @media(max-width:640px){
+    body{font-size:16px;}
+    .header h1{font-size:24px;}
+    .secao > h2{font-size:21px;}
+    table.comp{font-size:14px;}
+    .nav .brand{width:100%;margin-bottom:6px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 1. NAV ============ (renderizada pelo JS a partir de NAV[]) -->
+<nav class="nav">
+  <span class="brand">Bulle <b>Inteligente</b></span>
+  <div class="nav-links" id="navLinks"></div>
+  <button class="immersion" onclick="document.body.classList.toggle('imersao')">⛶ Modo imersão</button>
+</nav>
+
+<div class="wrap">
+
+  <!-- ============ 2. CABEÇALHO ============ -->
+  <header class="header">
+    <div class="logo">Bulle Inteligente</div>
+    <div class="sub">Material de estudo · Mentoria</div>
+    <div class="tag">— Tarefa de estudo</div>
+    <h1>Concurso RFB · Direito Administrativo · Organização Administrativa</h1>
+  </header>
+
+  <!-- ============ 3. COMO ESTUDAR ============ -->
+  <section id="como-estudar">
+    <div class="badge">📖 Como estudar · Organização Administrativa</div>
+    <div class="quote-box">Pronto(a) pra esse tema? Nós da Bulle Inteligente pegamos o essencial e organizamos do jeito que cola na sua cabeça.</div>
+  </section>
+
+  <!-- ============ 4. SEÇÕES DE CONTEÚDO ============ -->
+  <!-- INICIO CONTEUDO -->
+  <!--
+    Para cada subtema do PDF, gere uma <section class="secao" id="...">.
+    Componentes disponíveis (ver references/componentes.md):
+      - h2 com .lei opcional  ·  parágrafo de abertura com class="dropcap"
+      - <ul> com <b>termo</b> + explicação  ·  <mark>termo-chave</mark>
+      - <div class="macete"><span class="pill">MNEMÔNICO</span> ...</div>
+      - <p class="nota-juris">...</p>
+      - <table class="comp">...</table>
+      - <div class="banca"> ... </div>  (assinatura — use na MAIORIA das seções)
+  -->
+  <section class="secao" id="secao-1">
+    <h2>Sujeitos, Órgão × Entidade <span class="lei">(Lei 9.784/99, art. 1º, §2º)</span></h2>
+    <p class="dropcap">Três sujeitos desempenham a atividade administrativa do Estado: <b>órgãos públicos</b>, <b>entidades públicas</b> e <b>agentes públicos</b>. A grande pegadinha da matéria começa aqui — na diferença entre órgão e entidade, que é uma só palavra: <mark>personalidade jurídica</mark>.</p>
+    <ul>
+      <li><b>Entidade:</b> unidade de atuação <mark>dotada de personalidade jurídica</mark>. É uma pessoa jurídica, pública ou privada. Abrange as <b>entidades políticas</b> e as <b>entidades administrativas</b>.</li>
+      <li><b>Órgão:</b> unidade de atuação integrante da estrutura da Administração direta e indireta, <mark>sem personalidade jurídica própria</mark>. É um elemento <b>despersonalizado</b>, um "centro de competência".</li>
+      <li><b>Entidade política:</b> tem autonomia <b>política + administrativa</b> (União, Estados, DF, Municípios).</li>
+      <li><b>Entidade administrativa:</b> tem <mark>somente autonomia administrativa</mark> (ex.: uma autarquia).</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">ÓRGÃO = "SEM PJ"</span> Órgão é <b>centro de competência</b>, não tem personalidade. Quem tem personalidade — e responde na Justiça — é a <b>entidade</b> a que ele pertence.
+    </div>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que o órgão público é dotado de personalidade jurídica própria.
+      <div class="correcao"><b>Correto:</b> órgão é elemento <b>despersonalizado</b> ("centro de competência"). Personalidade jurídica é da <b>entidade</b> a que pertence.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-2">
+    <h2>Centralização, Descentralização e Concentração</h2>
+    <p class="dropcap">O Estado pode prestar suas tarefas de dois jeitos: fazendo ele mesmo (centralização) ou passando para outra pessoa jurídica (descentralização). E cuidado para não confundir descentralização com desconcentração/concentração — a banca adora essa troca.</p>
+    <ul>
+      <li><b>Centralização:</b> desempenho <mark>direto</mark> pelo Estado, por seus próprios órgãos e agentes.</li>
+      <li><b>Descentralização:</b> desempenho <mark>indireto</mark>, por outras pessoas físicas ou jurídicas, <mark>sem relação de hierarquia ou subordinação</mark>.</li>
+      <li><b>Concentração:</b> dois ou mais <b>órgãos internos</b> são agrupados em um só (órgão concentrador). É movimento <b>dentro</b> da mesma pessoa jurídica.</li>
+    </ul>
+    <h3>Descentralização política × administrativa</h3>
+    <ul>
+      <li><b>Política:</b> criação de uma <b>entidade política</b> para exercer competências próprias. Ex.: criação de Estados e Municípios.</li>
+      <li><b>Administrativa:</b> o poder central transfere <b>parcela de suas atribuições</b> a outra entidade.</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">DES-CENTRAL = SAI</span> Descentralização = tarefa <b>sai</b> do Estado para outra pessoa jurídica (sem hierarquia). Concentração = tarefa <b>junta</b> órgãos internos, sem sair da mesma PJ.
+    </div>
+    <p class="nota-juris">Centralização e concentração têm em comum a <b>fisionomia restritiva</b>: ambas <b>agregam</b> atribuições no Estado.</p>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que na descentralização há relação de hierarquia entre o poder central e a entidade que recebeu a tarefa.
+      <div class="correcao"><b>Correto:</b> na descentralização <b>não</b> há hierarquia nem subordinação — há apenas <b>controle/tutela</b> (vinculação). Hierarquia existe na <b>desconcentração</b>, dentro da mesma pessoa.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-3">
+    <h2>Modalidades de descentralização administrativa</h2>
+    <p class="dropcap">São três formas de descentralizar. A diferença mais cobrada está entre <b>serviços</b> e <b>colaboração</b>: o que se transfere (titularidade ou só execução) e como (por lei ou por contrato).</p>
+    <ul>
+      <li><b>Por serviços (outorga / funcional / técnica):</b> a entidade política, mediante <mark>lei</mark>, cria (ou autoriza a criação de) nova pessoa jurídica e a ela transfere a <mark>titularidade + a execução</mark> do serviço. → É a que ocorre na criação das <b>entidades da Administração Indireta</b>.</li>
+      <li><b>Por colaboração (delegação):</b> por <mark>contrato ou ato unilateral</mark> (sem lei formal), transfere-se <mark>apenas a execução</mark>; o Poder Público <b>conserva a titularidade</b>. → Ocorre nas <b>concessões, permissões e autorizações</b> de serviços públicos.</li>
+      <li><b>Territorial (geográfica):</b> entidade local, geograficamente delimitada, de direito público, com capacidade administrativa <mark>genérica</mark> (não regida pela especialidade). Típica dos <b>Estados unitários</b>; no Brasil, só na hipótese de criação de <b>Território Federal</b> (art. 18, §2º, CF).</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">OUTORGA = O de "Ó, LEI!"</span> Outorga vem por <b>lei</b> e leva <b>titularidade</b>. Colaboração/delegação vem por <b>contrato</b> e leva <b>só execução</b>.
+    </div>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que na descentralização por colaboração (concessão/permissão) o Estado transfere a titularidade do serviço ao particular.
+      <div class="correcao"><b>Correto:</b> na colaboração transfere-se <b>apenas a execução</b>; o Poder Público <b>conserva a titularidade</b>. Quem leva titularidade é a descentralização <b>por serviços/outorga</b>, e via <b>lei</b>.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-4">
+    <h2>Teoria do órgão e capacidade processual</h2>
+    <p class="dropcap">Como o Estado, que é abstrato, "quer" e "age"? A resposta aceita hoje é a <b>teoria do órgão</b>. E dela sai a regra sobre se um órgão pode ou não ir à Justiça sozinho.</p>
+    <ul>
+      <li><b>Teoria do mandato:</b> agente seria mandatário do Estado. <b>Superada</b> — o Estado não tem vontade própria para outorgar mandato.</li>
+      <li><b>Teoria da representação:</b> agente seria representante (como tutor/curador de incapaz). <b>Superada</b>.</li>
+      <li><b>Teoria do órgão (mais aceita):</b> a pessoa jurídica manifesta vontade pelos <b>órgãos</b>, compostos de agentes. Quando o agente age, é como se o próprio Estado agisse — há <mark>imputação</mark> (não "representação") dos atos ao Estado.</li>
+    </ul>
+    <h3>Capacidade processual dos órgãos</h3>
+    <p>Em regra, <mark>não</mark> têm — porque não possuem personalidade jurídica (a capacidade é da entidade). <b>Exceções:</b></p>
+    <ul>
+      <li>Órgãos <b>autônomos e independentes</b> podem impetrar <mark>mandado de segurança</mark> em defesa de suas <b>prerrogativas e competências</b>, quando violadas por ato de outro órgão.</li>
+      <li><b>CDC, art. 82, III:</b> órgãos/entidades da administração, ainda que sem personalidade, legitimados a promover liquidação/execução de indenização na defesa do consumidor.</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">IMPUTA, NÃO REPRESENTA</span> Teoria do órgão = <b>imputação</b>. O ato do agente é imputado ao Estado, como se o Estado mesmo tivesse feito.
+    </div>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que a teoria adotada hoje é a da representação, pela qual o Estado outorga responsabilidade ao agente.
+      <div class="correcao"><b>Correto:</b> a mais aceita é a <b>teoria do órgão</b>, baseada na <b>imputação</b> — os atos dos órgãos, pela vontade dos agentes, são imputados ao Estado.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-5">
+    <h2>Classificação dos órgãos públicos</h2>
+    <p class="dropcap">O PDF traz quatro critérios de classificação. O mais cobrado é o da <b>posição estatal</b>, que forma uma escadinha de cima para baixo: independentes → autônomos → superiores → subalternos.</p>
+    <h3>Quanto à estrutura</h3>
+    <ul>
+      <li><b>Simples/unitários:</b> sem subdivisões internas.</li>
+      <li><b>Compostos:</b> reúnem vários órgãos menores subordinados (resultado da desconcentração).</li>
+    </ul>
+    <h3>Quanto à atuação funcional</h3>
+    <ul>
+      <li><b>Singulares/unipessoais:</b> decisão de <b>um único</b> agente. Ex.: Presidência da República.</li>
+      <li><b>Colegiados/pluripessoais:</b> decisão pela <b>manifestação conjunta</b> dos membros. Ex.: Congresso Nacional, STF.</li>
+    </ul>
+    <h3>Quanto à posição estatal</h3>
+    <ul>
+      <li><b>Independentes:</b> previstos direto na CF, representam os três Poderes, <mark>sem subordinação hierárquica</mark>. Ex.: Presidência, Câmara, Senado, STF, tribunais, MP, Tribunais de Contas.</li>
+      <li><b>Autônomos:</b> na cúpula, logo abaixo dos independentes; ampla autonomia, <b>mas não independência</b>. Ex.: Ministérios, Secretarias.</li>
+      <li><b>Superiores:</b> direção/controle/decisão, <mark>sem autonomia</mark>, sujeitos a controle hierárquico. Ex.: Procuradorias, Gabinetes.</li>
+      <li><b>Subalternos:</b> mera execução, reduzido poder decisório. Ex.: seções de expediente, pessoal, material.</li>
+    </ul>
+    <p><b>Ainda:</b> órgãos <b>burocráticos</b> (hierarquia vertical) × colegiados (coordenação horizontal); e órgãos <b>ativos, consultivos ou de controle</b>.</p>
+    <div class="macete">
+      <span class="pill">I-A-S-S</span> Escada da posição estatal, de cima pra baixo: <b>I</b>ndependentes → <b>A</b>utônomos → <b>S</b>uperiores → <b>S</b>ubalternos.
+    </div>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Troca os exemplos: diz que os Ministérios são órgãos independentes, ou que a Presidência é órgão autônomo.
+      <div class="correcao"><b>Correto:</b> <b>Ministérios/Secretarias = autônomos</b>; <b>Presidência, Câmara, Senado, STF, MP, TCs = independentes</b>.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-6">
+    <h2>Administração Indireta e tutela</h2>
+    <p class="dropcap">A Administração Indireta é o conjunto de entidades criadas para descentralizar. A banca cobra a composição segundo <b>Di Pietro</b> e os quatro aspectos da tutela (controle).</p>
+    <h3>Composição (Di Pietro)</h3>
+    <ul>
+      <li><b>Autarquias</b>;</li>
+      <li><b>Fundações</b> instituídas pelo Poder Público;</li>
+      <li><b>Sociedades de economia mista</b>;</li>
+      <li><b>Empresas públicas</b>;</li>
+      <li><mark>Subsidiárias</mark> dessas empresas;</li>
+      <li><mark>Consórcios públicos</mark> — tanto de direito público quanto de direito privado.</li>
+    </ul>
+    <h3>Tutela administrativa (4 aspectos)</h3>
+    <ul>
+      <li><b>Controle político:</b> dirigentes escolhidos/nomeados pela administração direta (função de confiança).</li>
+      <li><b>Controle institucional:</b> obriga a entidade a caminhar rumo aos fins para que foi criada.</li>
+      <li><b>Controle administrativo:</b> fiscaliza agentes e rotinas.</li>
+      <li><b>Controle financeiro:</b> fiscaliza os setores financeiro e contábil.</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">P-I-A-F</span> Tutela: <b>P</b>olítico, <b>I</b>nstitucional, <b>A</b>dministrativo, <b>F</b>inanceiro.
+    </div>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que a tutela/supervisão da Administração Direta sobre a Indireta decorre de hierarquia.
+      <div class="correcao"><b>Correto:</b> é <b>controle finalístico (tutela/vinculação)</b>, não hierarquia. Entidade da Indireta é <b>vinculada</b>, não subordinada.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-7">
+    <h2>Autarquias <span class="lei">(DL 200/67, art. 5º · CF, art. 37)</span></h2>
+    <p class="dropcap">Autarquia é a "cara" do direito público na Indireta: nasce por lei específica, tem regime público e um pacote de prerrogativas parecido com o do próprio Estado.</p>
+    <ul>
+      <li><b>Conceito:</b> <mark>pessoa jurídica de direito público</mark>, criada por <mark>lei específica</mark>, com capacidade de autoadministração, para serviço público descentralizado.</li>
+      <li><b>Criação:</b> a lei específica <mark>já institui diretamente</mark> (não precisa de registro).</li>
+      <li><b>Regime:</b> jurídico-administrativo (direito público); pratica <b>atos administrativos</b> e celebra <b>contratos administrativos</b>, com <b>licitação</b>.</li>
+      <li><b>Pessoal:</b> estatutário <b>ou</b> celetista (fim do RJU).</li>
+      <li><b>Dirigentes:</b> nomeados pelo chefe do Executivo. <b>BCB</b> (que é autarquia): exige <mark>sabatina do Senado</mark>.</li>
+    </ul>
+    <h3>Prerrogativas (as mais cobradas)</h3>
+    <ul>
+      <li>Prazos processuais <b>em dobro</b> (CPC, art. 183);</li>
+      <li><b>Prescrição quinquenal</b> (dívidas contra a autarquia prescrevem em 5 anos);</li>
+      <li>Bens <b>impenhoráveis, inalienáveis e imprescritíveis</b> (bens públicos, art. 98 CC);</li>
+      <li>Regime de <b>precatórios</b> (CF, art. 100);</li>
+      <li>Créditos em <b>dívida ativa</b> + <b>execução fiscal</b>;</li>
+      <li><mark>Imunidade tributária</mark> sobre patrimônio, renda e serviços <b>vinculados às finalidades essenciais</b>;</li>
+      <li><b>Não sujeição à falência</b> (ente criador responde subsidiariamente).</li>
+    </ul>
+    <p class="nota-juris">STF (ADI 3.026/DF): a <b>OAB</b> é serviço independente, <b>sui generis</b>, que <b>não integra</b> a Administração Pública — embora tenha características de autarquia.</p>
+    <div class="macete">
+      <span class="pill">LEI JÁ CRIA</span> Autarquia (direito público) → lei <b>cria</b>. Estatais e fundações de direito privado → lei <b>autoriza</b> + registro.
+    </div>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que a imunidade tributária da autarquia alcança todos os seus bens e serviços, sem exceção.
+      <div class="correcao"><b>Correto:</b> a imunidade só alcança o que estiver <b>vinculado às finalidades essenciais</b>. Bem com destinação diversa <b>sofre incidência</b> de imposto.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-8">
+    <h2>Fundações Públicas <span class="lei">(RE 101.126/RJ)</span></h2>
+    <p class="dropcap">A fundação pública é a entidade "de duas caras": pode ser de direito público ou de direito privado — e essa escolha muda quase todo o regime. Nenhuma tem fim lucrativo.</p>
+    <ul>
+      <li><b>Fundação de direito público</b> ("fundação autárquica" / "autarquia fundacional"): é <mark>modalidade de autarquia</mark>. Regime jurídico-administrativo; <b>bens públicos</b>; precatórios; prazo especial; atos administrativos.</li>
+      <li><b>Fundação de direito privado:</b> regime <mark>híbrido</mark>; <b>bens privados</b>; <b>sem</b> prazo especial; <b>sem</b> duplo grau obrigatório; <b>sem</b> precatório; pratica em regra atos de direito privado.</li>
+      <li><b>Ambas:</b> têm <mark>imunidade tributária recíproca</mark> e celebram <b>contratos administrativos com licitação</b>.</li>
+    </ul>
+    <p class="nota-juris">MP (ADI 2.794): cabe ao Ministério Público velar por todas as fundações — o MPF pelas federais (onde estiverem), o MP estadual pelas estaduais/municipais, o MPDFT pelas distritais.</p>
+    <div class="macete">
+      <span class="pill">PÚBLICA = "VIRA AUTARQUIA"</span> Fundação de <b>direito público</b> segue o regime da autarquia. Fundação de <b>direito privado</b> segue o das estatais (híbrido).
+    </div>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que as fundações públicas de direito privado se submetem ao regime de precatórios e têm prazo processual especial.
+      <div class="correcao"><b>Correto:</b> fundação de <b>direito privado NÃO</b> tem precatório nem prazo especial nem duplo grau obrigatório. Mas <b>tem</b> imunidade tributária recíproca.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-9">
+    <h2>Empresas Estatais (EP e SEM) <span class="lei">(CF, art. 173, §1º · Lei 13.303/2016)</span></h2>
+    <p class="dropcap">Empresa pública e sociedade de economia mista são o lado "empresarial" da Indireta: direito privado, regime híbrido, e um estatuto próprio. A banca vive confundindo EP com SEM.</p>
+    <ul>
+      <li><b>Natureza:</b> <mark>pessoa jurídica de direito privado</mark>, regime <b>híbrido</b>.</li>
+      <li><b>Instituição:</b> lei <mark>autoriza</mark> + registro. Extinção: lei autorizadora + baixa do registro.</li>
+      <li><b>Atividades:</b> exploração de atividade econômica <b>ou</b> prestação de serviço público.</li>
+      <li><b>Bens privados;</b> pessoal <b>celetista</b> (emprego público, sem estabilidade), com <mark>concurso público</mark>.</li>
+      <li><b>Falência:</b> <mark>não se sujeitam</mark> (Lei 11.101/2005, art. 2º, I) — independentemente do campo de atuação.</li>
+      <li><b>Estatuto:</b> Lei 13.303/2016 abrange as que exploram atividade econômica <b>e</b> as prestadoras de serviço público.</li>
+    </ul>
+    <h3>EP × SEM</h3>
+    <ul>
+      <li><b>Empresa pública:</b> <mark>qualquer forma jurídica</mark>; capital <b>100% público</b>. Foro (federal): <b>Justiça Federal</b>.</li>
+      <li><b>Sociedade de economia mista:</b> <mark>necessariamente S.A.</mark>; capital <b>misto</b> (maioria do capital <b>votante</b> deve ser pública). Foro (federal): <b>Justiça Estadual</b> (Súmula STF 556); vai à Federal só se a União intervier como assistente/opoente (Súmula STF 517).</li>
+    </ul>
+    <h3>Subsidiárias</h3>
+    <ul>
+      <li>Criação depende de autorização legislativa, mas a <mark>própria lei instituidora da matriz pode autorizar</mark> a criação de subsidiárias (ADI 1.649/DF) — não precisa de lei específica para cada uma.</li>
+      <li><b>Venda</b> de subsidiária: <mark>sem</mark> autorização legislativa e <mark>sem</mark> licitação.</li>
+      <li>Compõem a <b>Administração Indireta</b>.</li>
+    </ul>
+    <p class="nota-juris">STF: dirigentes de estatais <b>não</b> se sujeitam à aprovação prévia do Legislativo (ADI 1.642/MG) — isso é legítimo só para autarquias e fundações. Desestatização pode ter autorização <b>genérica</b> (ADI 6241). Correios (RE 220.906): bens afetos ao serviço público são <b>impenhoráveis</b>.</p>
+    <div class="macete">
+      <span class="pill">SEM = S.A. + SÓCIOS</span> <b>S</b>ociedade de <b>e</b>conomia <b>m</b>ista é <b>S.A.</b> e tem sócios privados. <b>EP</b> é 100% pública e aceita qualquer forma.
+    </div>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que a sociedade de economia mista federal tem foro na Justiça Federal, e que a EP admite capital privado.
+      <div class="correcao"><b>Correto:</b> <b>SEM federal → Justiça Estadual</b> (Súmula 556; só vai à Federal se a União intervier — Súmula 517). <b>EP → capital 100% público</b>. Quem admite capital privado é a <b>SEM</b>.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-10">
+    <h2>Agências Executivas × Reguladoras <span class="lei">(Lei 9.649/98 · Lei 9.986/2000)</span></h2>
+    <p class="dropcap">As duas têm "agência" no nome, mas são coisas diferentes: uma é qualificação (executiva), a outra é tipo de entidade (reguladora). E só uma delas pode ser "desqualificada".</p>
+    <h3>Agência executiva</h3>
+    <ul>
+      <li>É uma <mark>qualificação</mark> dada a <b>autarquia ou fundação</b> que firme <b>contrato de gestão</b> (CF, art. 37, §8º) + plano de reestruturação. <b>Não é nova entidade</b>.</li>
+      <li>É <b>faculdade</b> do Poder Público (ato do Presidente); contrato de gestão com o Ministério Supervisor, mínimo de 1 ano.</li>
+      <li>Ganha <b>autonomia gerencial, orçamentária e financeira ampliada</b>. <mark>Pode ser desqualificada</mark>.</li>
+    </ul>
+    <h3>Agência reguladora</h3>
+    <ul>
+      <li>É <mark>autarquia</mark> (em geral em <b>regime especial</b>), que regula, controla e fiscaliza atividade econômica/serviço delegado; exerce <b>poder de polícia</b>.</li>
+      <li>Poder normativo por <b>regulamentos delegados/autorizados</b> (instituto da <mark>deslegalização</mark>) — dependem de autorização legal e não criam obrigação nova sem lei.</li>
+      <li>Dirigentes: nomeados pelo Presidente após <b>sabatina do Senado</b> (Lei 9.986/2000). Sujeitam-se a controle judicial e legislativo.</li>
+      <li><mark>Não existe desqualificação</mark> de agência reguladora (não é qualificação formal).</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">EXECUTIVA = EFÊMERA</span> Agência <b>e</b>xecutiva pode ser d<b>e</b>squalificada (é qualificação). Reguladora é autarquia — <b>não</b> se desqualifica.
+    </div>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que a agência reguladora é uma qualificação temporária que pode ser desqualificada, ou que a executiva é uma nova entidade da Indireta.
+      <div class="correcao"><b>Correto:</b> <b>reguladora = autarquia</b> (não se desqualifica); <b>executiva = qualificação</b> (pode ser desqualificada) e <b>não é nova entidade</b>.</div>
+    </div>
+  </section>
+  <!-- FIM CONTEUDO -->
+
+  <!-- ============ 5. QUADRO COMPARATIVO (CONDICIONAL) ============ -->
+  <!-- Só inclua esta seção se houver conceitos que se opõem/confundem. Caso contrário, REMOVA o bloco inteiro e o link do NAV. -->
+  <section id="quadro-comparativo">
+    <div class="badge">📊 Quadro comparativo</div>
+    <p class="intro">Quando dá pra comparar, compara: lado a lado, o que a banca adora confundir fica fácil de fixar.</p>
+    <table class="comp">
+      <caption>Autarquia × Empresa Estatal (EP/SEM)</caption>
+      <thead><tr><th>Critério</th><th>Autarquia</th><th>Empresa estatal</th></tr></thead>
+      <tbody>
+        <tr><td>Personalidade</td><td class="dif">Direito público</td><td>Direito privado</td></tr>
+        <tr><td>Criação</td><td class="dif">Lei específica já institui</td><td>Lei autoriza + registro</td></tr>
+        <tr><td>Bens</td><td class="dif">Públicos (impenhoráveis)</td><td>Privados</td></tr>
+        <tr><td>Falência</td><td>Não se sujeita</td><td class="dif">Não se sujeita (Lei 11.101, art. 2º, I)</td></tr>
+        <tr><td>Pessoal</td><td>Estatutário ou celetista</td><td class="dif">Celetista + concurso</td></tr>
+      </tbody>
+    </table>
+
+    <table class="comp">
+      <caption>Empresa Pública × Sociedade de Economia Mista</caption>
+      <thead><tr><th>Critério</th><th>Empresa pública</th><th>Sociedade de economia mista</th></tr></thead>
+      <tbody>
+        <tr><td>Forma jurídica</td><td>Qualquer forma admitida</td><td class="dif">Necessariamente S.A.</td></tr>
+        <tr><td>Capital</td><td class="dif">100% público</td><td>Público + privado (maioria do votante pública)</td></tr>
+        <tr><td>Foro (federal)</td><td class="dif">Justiça Federal</td><td>Justiça Estadual (Súm. 556/517)</td></tr>
+      </tbody>
+    </table>
+
+    <table class="comp">
+      <caption>Descentralização por serviços × por colaboração</caption>
+      <thead><tr><th>Critério</th><th>Por serviços (outorga)</th><th>Por colaboração (delegação)</th></tr></thead>
+      <tbody>
+        <tr><td>Instrumento</td><td class="dif">Lei</td><td>Contrato ou ato unilateral</td></tr>
+        <tr><td>O que transfere</td><td class="dif">Titularidade + execução</td><td>Só a execução</td></tr>
+        <tr><td>Exemplo</td><td>Criação da Adm. Indireta</td><td class="dif">Concessão/permissão/autorização</td></tr>
+      </tbody>
+    </table>
+
+    <table class="comp">
+      <caption>Agência executiva × Agência reguladora</caption>
+      <thead><tr><th>Critério</th><th>Executiva</th><th>Reguladora</th></tr></thead>
+      <tbody>
+        <tr><td>O que é</td><td class="dif">Qualificação (autarquia/fundação)</td><td>Autarquia (regime especial)</td></tr>
+        <tr><td>Instrumento</td><td class="dif">Contrato de gestão</td><td>Lei instituidora</td></tr>
+        <tr><td>Desqualificação</td><td class="dif">Possível</td><td>Não existe</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============ 6. REVISÃO RÁPIDA ============ -->
+  <section id="revisao-rapida">
+    <div class="badge">⚡ Revisão rápida</div>
+    <p class="intro">Resumo final — 5 min antes da prova.</p>
+    <div class="revisao">
+      <h3>Conceitos-chave</h3>
+      <ul>
+        <li><b>Órgão:</b> sem personalidade, "centro de competência". <b>Entidade:</b> tem personalidade jurídica.</li>
+        <li><b>Descentralização:</b> sai da PJ, <mark>sem hierarquia</mark>. <b>Concentração/desconcentração:</b> dentro da mesma PJ, com hierarquia.</li>
+        <li><b>Teoria do órgão:</b> vontade do Estado por <mark>imputação</mark>.</li>
+        <li><b>Autarquia:</b> direito público, lei cria. <b>Estatal:</b> direito privado, lei autoriza + registro.</li>
+      </ul>
+      <h3>Regras essenciais</h3>
+      <ul>
+        <li><b>Outorga:</b> lei + <mark>titularidade</mark>. <b>Colaboração:</b> contrato + <mark>só execução</mark>.</li>
+        <li><b>EP:</b> capital 100% público, qualquer forma, foro Federal. <b>SEM:</b> S.A., capital misto, foro <mark>Estadual</mark>.</li>
+        <li>Estatais e autarquias <mark>não falem</mark> (Lei 11.101/2005).</li>
+        <li>Subsidiária: lei-mãe pode autorizar; <b>venda</b> sem lei e sem licitação.</li>
+        <li><b>Executiva</b> pode ser desqualificada; <b>reguladora</b> não.</li>
+      </ul>
+      <div class="pegadinhas-foco">
+        <div class="titulo">◎ Pegadinhas-foco & jurisprudência</div>
+        <ul>
+          <li>Imunidade da autarquia só sobre bens ligados às <b>finalidades essenciais</b>.</li>
+          <li><b>OAB não integra a Administração</b> (ADI 3.026/DF).</li>
+          <li><b>SEM federal → Justiça Estadual</b> (Súmulas STF 556 e 517).</li>
+          <li>Dirigente de estatal <b>não</b> passa por sabatina do Legislativo (ADI 1.642/MG); autarquia/fundação, sim.</li>
+          <li>Fundação de direito privado: <b>sem</b> precatório/prazo especial, mas <b>com</b> imunidade recíproca.</li>
+          <li>Desestatização pode ter autorização <b>genérica</b> (ADI 6241).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. ÚLTIMA PASSADA — Checklist do Uber ============ (renderizado pelo JS a partir de CHECKLIST[]) -->
+  <section id="ultima-passada">
+    <div class="badge">🚕 Última passada</div>
+    <p class="intro">Pontos curtos pra você revisar a caminho da prova. Cada um é um item-chave já estudado — ativa a memória sem precisar abrir caderno.</p>
+    <div id="checklist"></div>
+  </section>
+
+  <!-- ============ 8. FIXAÇÃO — Quiz Cebraspe ============ (renderizado pelo JS a partir de QUIZ[]) -->
+  <section id="fixacao">
+    <div class="badge">◎ Fixação</div>
+    <p class="intro">Pra fixar mesmo: responda no padrão Cebraspe. Cada item já vem com explicação do "por que" pós-resposta.</p>
+    <span class="timer" id="timer">⏱ 00:00</span>
+    <div id="quiz"></div>
+    <div class="placar" id="placar"></div>
+    <button class="refazer" onclick="resetQuiz()">↺ Refazer quiz</button>
+  </section>
+
+  <!-- ============ 9. EXPLICA PRA CRIANÇA (Feynman) ============ -->
+  <section id="explica-crianca">
+    <div class="badge">🗣️ Explica pra criança</div>
+    <p class="intro">Se você consegue explicar pra uma criança de 12 anos, você realmente aprendeu. Leia em voz alta, no seu ritmo.</p>
+    <div class="feynman">
+      <ul>
+        <li><b>O Estado é grandão demais pra fazer tudo sozinho:</b> imagina uma dona de casa que tem MUITA tarefa. Ou ela mesma faz tudo (isso é <b>centralização</b>), ou ela chama outras pessoas pra ajudar (isso é <b>descentralização</b>). Quando ela chama alguém de fora, esse alguém não é "mandado" por ela como um empregado — trabalha com liberdade, só é fiscalizado (não tem <b>hierarquia</b>, só controle).</li>
+        <li><b>Órgão x entidade é tipo "sala" x "empresa":</b> o <b>órgão</b> é só uma salinha dentro da empresa — não pode assinar contrato sozinho, não tem CPF próprio (não tem <b>personalidade jurídica</b>). Já a <b>entidade</b> é a empresa inteira, essa sim tem "CPF" e responde por tudo.</li>
+        <li><b>Quando o funcionário age, é o Estado agindo:</b> pensa num jogador de futebol num time. Quando ele faz o gol, quem ganhou o ponto foi o <b>time</b>, não só ele. Com o Estado é igual: o que o agente faz "conta" pro Estado (isso é a <b>teoria do órgão</b>, chamada de <b>imputação</b>).</li>
+        <li><b>Autarquia é filha "pública" do Estado:</b> nasce com uma <b>lei</b> (que já a cria pronta), tem os mesmos "superpoderes" do Estado — não pode falir, seus bens ninguém penhora, e paga dívida numa fila especial (os <b>precatórios</b>). O Banco Central é uma dessas.</li>
+        <li><b>Empresa estatal é filha que vira "empresária":</b> o Estado monta uma empresa pra vender coisa ou prestar serviço. Aí ela joga quase pelas mesmas regras das empresas normais (<b>direito privado</b>), contrata gente por <b>concurso</b> e com carteira assinada (<b>CLT</b>). Tem duas: a <b>empresa pública</b> (dinheiro 100% do governo) e a <b>sociedade de economia mista</b> (dinheiro do governo + de sócios de fora, e é sempre S.A.).</li>
+        <li><b>Agência executiva x reguladora:</b> "executiva" é só um <b>apelido</b> que uma autarquia ganha quando promete cumprir metas (<b>contrato de gestão</b>) — e apelido pode ser tirado. Já a "reguladora" é uma autarquia de verdade que fiscaliza um setor (como a de energia ou telefonia) — essa não perde o nome.</li>
+      </ul>
+      <div class="resumo">Se for pra lembrar de uma coisa só, lembra que: <b>órgão não tem "CPF" (personalidade) — a entidade tem</b>; e que <b>autarquia a lei já cria pronta, enquanto a estatal a lei só autoriza e depois precisa registrar</b>.</div>
+    </div>
+  </section>
+
+  <!-- ============ 10. CONCLUIR ============ -->
+  <section class="concluir">
+    <p>Marque pra contar como tópico concluído no edital e desbloquear o próximo.</p>
+    <button class="btn-concluir" onclick="this.classList.toggle('feito');this.textContent=this.classList.contains('feito')?'✓ Concluída!':'✓ Marcar como concluída'">✓ Marcar como concluída</button>
+    <div class="assinatura">◆ Bulle Inteligente ◆</div>
+  </section>
+
+</div>
+
+<script>
+/* =====================================================================
+   BLOCO DE DADOS — preencha estes 3 arrays com o conteúdo do PDF.
+   O motor abaixo renderiza NAV, Checklist e Quiz automaticamente.
+   ===================================================================== */
+
+// Links da navegação. Um por seção existente (remova o do quadro comparativo se não usar).
+const NAV = [
+  {id:"como-estudar",       label:"Como estudar"},
+  {id:"secao-1",            label:"Órgão × Entidade"},
+  {id:"secao-2",            label:"Centralização"},
+  {id:"secao-3",            label:"Descentralização"},
+  {id:"secao-4",            label:"Teoria do órgão"},
+  {id:"secao-5",            label:"Classificação"},
+  {id:"secao-6",            label:"Adm. Indireta"},
+  {id:"secao-7",            label:"Autarquias"},
+  {id:"secao-8",            label:"Fundações"},
+  {id:"secao-9",            label:"Estatais"},
+  {id:"secao-10",           label:"Agências"},
+  {id:"quadro-comparativo", label:"Quadro comparativo"},
+  {id:"revisao-rapida",     label:"Revisão rápida"},
+  {id:"ultima-passada",     label:"Última passada"},
+  {id:"fixacao",            label:"Fixação"},
+  {id:"explica-crianca",    label:"Explica pra criança"},
+];
+
+// Checklist do Uber — 20 a 30 frases de uma linha, cada uma um ponto-chave.
+const CHECKLIST = [
+  "Três sujeitos da atividade administrativa: <b>órgãos, entidades e agentes</b>.",
+  "<b>Órgão</b> = sem personalidade (centro de competência); <b>entidade</b> = com personalidade jurídica.",
+  "Entidade política tem autonomia política + administrativa; administrativa só a administrativa.",
+  "<b>Centralização</b> = execução direta; <b>descentralização</b> = indireta, <b>sem hierarquia</b>.",
+  "<b>Concentração</b> = agrupar órgãos internos; junto com centralização tem fisionomia <b>restritiva</b>.",
+  "Descentralização <b>política</b> cria ente político; <b>administrativa</b> transfere atribuições.",
+  "<b>Por serviços/outorga</b>: por lei, transfere titularidade + execução (cria a Adm. Indireta).",
+  "<b>Por colaboração/delegação</b>: por contrato, transfere só execução (concessão/permissão).",
+  "<b>Territorial</b>: entidade local com capacidade genérica; no Brasil só via Território Federal.",
+  "Teoria adotada é a <b>do órgão</b> — vontade do Estado por <b>imputação</b>.",
+  "Órgão em regra <b>não</b> tem capacidade processual (exceção: MS de órgão autônomo/independente; CDC art. 82, III).",
+  "Posição estatal (escada): <b>independentes → autônomos → superiores → subalternos</b>.",
+  "Ministérios/Secretarias = <b>autônomos</b>; Presidência/STF/MP/TC = <b>independentes</b>.",
+  "Composição da Indireta (Di Pietro): autarquias, fundações, SEM, EP, subsidiárias e <b>consórcios públicos</b>.",
+  "Tutela: controle <b>político, institucional, administrativo e financeiro</b>.",
+  "<b>Autarquia</b>: PJ direito público, <b>lei específica cria</b>, regime administrativo.",
+  "Prerrogativas da autarquia: prazo em dobro, prescrição quinquenal, precatório, dívida ativa, imunidade, não falência.",
+  "Imunidade tributária da autarquia só sobre <b>finalidades essenciais</b>.",
+  "<b>OAB não integra a Administração</b> (ADI 3.026/DF).",
+  "<b>Fundação de direito público</b> = autarquia fundacional (bens públicos, precatório).",
+  "<b>Fundação de direito privado</b>: regime híbrido, sem precatório/prazo especial, mas com imunidade recíproca.",
+  "<b>Estatais</b>: PJ direito privado, lei <b>autoriza</b> + registro, regime híbrido.",
+  "Estatais e autarquias <b>não se sujeitam à falência</b> (Lei 11.101/2005, art. 2º, I).",
+  "Estatuto das estatais = <b>Lei 13.303/2016</b> (atividade econômica e serviço público).",
+  "<b>EP</b>: 100% público, qualquer forma, foro Federal. <b>SEM</b>: S.A., capital misto, foro Estadual.",
+  "Subsidiária: lei-mãe pode autorizar; <b>venda</b> sem lei e sem licitação.",
+  "Dirigente de estatal <b>não</b> passa por sabatina do Legislativo (ADI 1.642/MG).",
+  "<b>Agência executiva</b> = qualificação por contrato de gestão; <b>pode ser desqualificada</b>.",
+  "<b>Agência reguladora</b> = autarquia (regime especial), poder normativo por <b>deslegalização</b>; não se desqualifica.",
+];
+
+// Quiz Cebraspe — ~26 itens. answer: true=CERTO, false=ERRADO. exp = gabarito comentado.
+const QUIZ = [
+  {enun:"O órgão público é dotado de personalidade jurídica própria, sendo apto a contrair obrigações em nome próprio.", answer:false, exp:"ERRADO. Órgão é elemento <b>despersonalizado</b> (centro de competência). A personalidade é da <b>entidade</b> a que pertence."},
+  {enun:"Entidade é a unidade de atuação dotada de personalidade jurídica, podendo ser pública ou privada.", answer:true, exp:"CERTO. É o conceito da Lei 9.784/99 (art. 1º, §2º, II)."},
+  {enun:"A entidade administrativa possui autonomia política e administrativa, tal como a entidade política.", answer:false, exp:"ERRADO. A entidade administrativa tem <b>somente</b> autonomia administrativa; a política tem as duas."},
+  {enun:"Na descentralização administrativa, o desempenho das tarefas é indireto e ocorre sem relação de hierarquia ou subordinação.", answer:true, exp:"CERTO. Descentralização = execução indireta, sem hierarquia — há apenas controle/tutela."},
+  {enun:"Na concentração administrativa, dois ou mais órgãos internos são agrupados em um único órgão concentrador.", answer:true, exp:"CERTO. É movimento interno à mesma pessoa jurídica, de fisionomia restritiva."},
+  {enun:"A criação de novos Estados e Municípios é exemplo de descentralização administrativa.", answer:false, exp:"ERRADO. Criação de entes federativos é descentralização <b>política</b>. A administrativa apenas transfere atribuições a outra entidade."},
+  {enun:"Na descentralização por colaboração (delegação), o Estado transfere ao particular a titularidade do serviço público.", answer:false, exp:"ERRADO. Na colaboração transfere-se <b>apenas a execução</b>; o Poder Público conserva a <b>titularidade</b>. Ocorre nas concessões/permissões/autorizações."},
+  {enun:"A descentralização por serviços (outorga) se dá por lei e transfere titularidade e execução do serviço à nova pessoa jurídica.", answer:true, exp:"CERTO. É a modalidade que cria as entidades da Administração Indireta."},
+  {enun:"A descentralização territorial, típica dos Estados unitários, só pode ocorrer no Brasil na hipótese de criação de Território Federal.", answer:true, exp:"CERTO. Entidade local com capacidade administrativa genérica (art. 18, §2º, CF)."},
+  {enun:"A teoria mais aceita atualmente para explicar a relação Estado-agente é a teoria da representação.", answer:false, exp:"ERRADO. A mais aceita é a <b>teoria do órgão</b>, baseada na <b>imputação</b>. A representação está superada."},
+  {enun:"Em regra, os órgãos públicos não possuem capacidade processual, admitindo-se exceções como o MS impetrado por órgãos autônomos em defesa de suas prerrogativas.", answer:true, exp:"CERTO. Regra: sem capacidade (falta personalidade). Exceção: MS de órgão autônomo/independente e legitimação do CDC (art. 82, III)."},
+  {enun:"Os Ministérios e Secretarias de Estado são classificados como órgãos independentes.", answer:false, exp:"ERRADO. São órgãos <b>autônomos</b> (cúpula, logo abaixo dos independentes). Independentes são Presidência, Câmara, Senado, STF, MP, TCs."},
+  {enun:"Segundo Di Pietro, os consórcios públicos — de direito público ou privado — integram a Administração Indireta.", answer:true, exp:"CERTO. A composição inclui autarquias, fundações, SEM, EP, subsidiárias e consórcios públicos."},
+  {enun:"A tutela administrativa exercida sobre as entidades da Administração Indireta decorre de relação de hierarquia com a Administração Direta.", answer:false, exp:"ERRADO. É controle finalístico (tutela/vinculação), <b>não hierarquia</b>. A entidade é vinculada, não subordinada."},
+  {enun:"As autarquias são pessoas jurídicas de direito público criadas por lei específica, que já as institui diretamente.", answer:true, exp:"CERTO. Por serem de direito público, a lei específica já institui (sem necessidade de registro)."},
+  {enun:"A imunidade tributária das autarquias alcança todos os seus bens, ainda que com destinação diversa de suas finalidades essenciais.", answer:false, exp:"ERRADO. A imunidade só alcança patrimônio/renda/serviços <b>vinculados às finalidades essenciais</b>. Destinação diversa sofre incidência."},
+  {enun:"Segundo o STF (ADI 3.026/DF), a OAB é entidade sui generis que não integra a Administração Pública.", answer:true, exp:"CERTO. Serviço independente, apesar de ter características de autarquia."},
+  {enun:"As autarquias sujeitam-se ao processo de falência regido pela Lei 11.101/2005.", answer:false, exp:"ERRADO. Autarquias <b>não</b> se sujeitam à falência; o ente criador responde subsidiariamente. Estatais também são excluídas (art. 2º, I)."},
+  {enun:"A fundação pública de direito público é considerada uma modalidade de autarquia, submetendo-se ao regime jurídico-administrativo.", answer:true, exp:"CERTO. É a 'fundação autárquica' (RE 101.126/RJ): bens públicos, precatório, prazo especial."},
+  {enun:"As fundações públicas de direito privado submetem-se ao regime de precatórios e possuem prazo processual especial para contestar e recorrer.", answer:false, exp:"ERRADO. Fundação de direito privado <b>não</b> tem precatório, prazo especial nem duplo grau obrigatório — mas <b>tem</b> imunidade recíproca."},
+  {enun:"As empresas estatais são pessoas jurídicas de direito privado, instituídas mediante autorização legal e posterior registro.", answer:true, exp:"CERTO. Regime híbrido; lei autoriza + registro. A extinção também exige lei autorizadora + baixa."},
+  {enun:"A sociedade de economia mista pode adotar qualquer forma jurídica admitida em direito.", answer:false, exp:"ERRADO. A SEM é <b>necessariamente S.A.</b>. Quem pode adotar qualquer forma é a <b>empresa pública</b>."},
+  {enun:"O capital da empresa pública é totalmente público, admitindo-se que provenha de entes federativos ou pessoas administrativas diferentes.", answer:true, exp:"CERTO. EP = capital 100% público. Já a SEM tem capital misto, com maioria do capital votante pública."},
+  {enun:"A sociedade de economia mista federal tem foro, em regra, na Justiça Federal.", answer:false, exp:"ERRADO. SEM federal → <b>Justiça Estadual</b> (Súmula STF 556). Só vai à Federal se a União intervier como assistente/opoente (Súmula STF 517). A EP federal, sim, é Justiça Federal."},
+  {enun:"É dispensável autorização legislativa específica para cada subsidiária, bastando que a lei instituidora da matriz preveja essa criação.", answer:true, exp:"CERTO (ADI 1.649/DF). A lei-mãe é a própria medida autorizadora. E a <b>venda</b> de subsidiária dispensa lei e licitação."},
+  {enun:"Diferentemente da agência executiva, a agência reguladora não comporta a figura da desqualificação.", answer:true, exp:"CERTO. 'Reguladora' é autarquia (não é qualificação formal). A <b>executiva</b> é qualificação e pode ser desqualificada."},
+];
+
+/* =====================================================================
+   MOTOR — não precisa alterar.
+   ===================================================================== */
+// Nav
+document.getElementById('navLinks').innerHTML =
+  NAV.map(n=>`<a href="#${n.id}">${n.label}</a>`).join('');
+
+// Checklist
+document.getElementById('checklist').innerHTML =
+  CHECKLIST.map((t,i)=>`<div class="card-check"><span class="num">${String(i+1).padStart(2,'0')}</span><span class="txt">${t}</span></div>`).join('');
+
+// Quiz
+const quizEl = document.getElementById('placar');
+let respostas = {};
+function renderQuiz(){
+  respostas = {};
+  document.getElementById('quiz').innerHTML = QUIZ.map((q,i)=>`
+    <div class="card-q" id="q${i}">
+      <div class="rot">Questão ${String(i+1).padStart(2,'0')}</div>
+      <div class="enun">${q.enun}</div>
+      <div class="btns">
+        <button onclick="responder(${i},true)">✓ CERTO</button>
+        <button onclick="responder(${i},false)">✗ ERRADO</button>
+      </div>
+      <div class="exp" id="exp${i}">
+        <div class="verdict"></div>
+        <div class="gab">${q.exp}</div>
+      </div>
+    </div>`).join('');
+  document.getElementById('placar').textContent='';
+}
+function responder(i,escolha){
+  if(respostas[i]!==undefined) return;
+  respostas[i]=escolha;
+  const q=QUIZ[i], card=document.getElementById('q'+i);
+  const btns=card.querySelectorAll('button');
+  const acertou = escolha===q.answer;
+  btns.forEach(b=>b.disabled=true);
+  btns[escolha?0:1].classList.add(escolha?'sel-certo':'sel-errado');
+  card.classList.add(acertou?'acertou':'errou');
+  const exp=document.getElementById('exp'+i);
+  exp.querySelector('.verdict').textContent = acertou ? '✓ Você acertou' : '✗ Você errou — gabarito: '+(q.answer?'CERTO':'ERRADO');
+  exp.querySelector('.verdict').style.color = acertou ? 'var(--verde)' : 'var(--vermelho)';
+  exp.classList.add('show');
+  atualizaPlacar();
+}
+function atualizaPlacar(){
+  const total=QUIZ.length, feitas=Object.keys(respostas).length;
+  const acertos=Object.keys(respostas).filter(i=>respostas[i]===QUIZ[i].answer).length;
+  document.getElementById('placar').textContent = feitas===total ? `Você acertou ${acertos} de ${total}.` : `${feitas}/${total} respondidas · ${acertos} certas`;
+}
+function resetQuiz(){ renderQuiz(); }
+renderQuiz();
+
+// Timer decorativo
+let seg=0;
+setInterval(()=>{seg++;const m=String(Math.floor(seg/60)).padStart(2,'0'),s=String(seg%60).padStart(2,'0');
+  document.getElementById('timer').textContent=`⏱ ${m}:${s}`;},1000);
+</script>
+</body>
+</html>

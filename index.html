@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  PORTAL DE ESTUDOS · RFB 2027 — visual Bulle Inteligente
+  ============================================================================
+  COMO USAR / EDITAR (só mexa no bloco DADOS lá embaixo, dentro de <script>):
+
+  1) Cada disciplina tem uma lista "assuntos". Para adicionar um resumo novo,
+     copie uma linha e preencha:
+
+        { nome:"Nome do assunto", html:"pasta/arquivo.html", tec:"" }
+
+     - nome : o título que aparece no card (ex.: "Competência Tributária")
+     - html : caminho do seu resumo. Se você hospedar cada disciplina numa
+              pasta (recomendado), fica "direito-tributario/competencia.html".
+              Deixe "" enquanto o resumo ainda não existe → aparece "pendente".
+     - tec  : cole aqui o link do caderno de exercícios do TEC quando tiver.
+              Enquanto estiver "", o botão do TEC simplesmente não aparece.
+
+  2) Onde hospedar: suba este index.html + suas pastas no GitHub Pages
+     (ou Netlify Drop). Aí os caminhos relativos acima funcionam sozinhos.
+
+  3) Nada mais precisa ser mexido. O portal se desenha sozinho a partir do
+     bloco DADOS: cards, contagem, busca e botões.
+  ============================================================================
+-->
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal de Estudos · RFB 2027 · Bulle Inteligente</title>
+<style>
+  :root{
+    --laranja:#E06F23;
+    --laranja-escuro:#C25E18;
+    --laranja-detalhe:#B85417;
+    --pessego:#FBE3CF;
+    --navy:#0B2432;
+    --navy-grad:#123243;
+    --grafite:#2A2320;
+    --creme-banca:#FCF6E3;
+    --creme-revisao:#FCEBDD;
+    --branco:#ffffff;
+    --cinza-linha:#ece4dc;
+    --zebra:#faf5ef;
+    --verde:#2e7d4f;
+    --verde-bg:#e5f4ea;
+    --vermelho:#c0392b;
+    --vermelho-bg:#fbe9e7;
+    --serif:Georgia,'Times New Roman',serif;
+    --sans:'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;font-family:var(--serif);color:var(--grafite);
+    background:#fdfbf8;line-height:1.7;font-size:17px;
+  }
+  a{color:inherit;}
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    background:linear-gradient(90deg,var(--navy),var(--navy-grad));
+    color:#eaf1f5;display:flex;align-items:center;gap:12px;
+    padding:11px 18px;flex-wrap:wrap;box-shadow:0 2px 14px rgba(0,0,0,.18);
+  }
+  .nav .brand{
+    font-family:var(--sans);font-weight:700;letter-spacing:.5px;
+    color:#fff;font-size:15px;white-space:nowrap;cursor:pointer;
+  }
+  .nav .brand b{color:var(--laranja);}
+  .nav .spacer{flex:1;}
+  .search{
+    display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.15);border-radius:22px;padding:6px 14px;
+    min-width:210px;flex:1;max-width:340px;
+  }
+  .search input{
+    background:transparent;border:none;outline:none;color:#fff;
+    font-family:var(--sans);font-size:13.5px;width:100%;
+  }
+  .search input::placeholder{color:#a9c0cd;}
+  .search .ic{color:#a9c0cd;font-size:14px;}
+
+  /* ---------- layout ---------- */
+  .wrap{max-width:960px;margin:0 auto;padding:0 22px 90px;}
+
+  /* ---------- cabeçalho ---------- */
+  .header{text-align:center;padding:44px 10px 20px;}
+  .header .logo{
+    font-family:var(--serif);font-size:28px;font-weight:700;
+    color:var(--laranja);letter-spacing:.5px;
+  }
+  .header .sub{
+    font-family:var(--sans);font-size:11px;letter-spacing:3px;
+    color:#8a7d72;margin-top:6px;text-transform:uppercase;
+  }
+  .header h1{
+    font-family:var(--serif);font-size:30px;line-height:1.2;
+    margin:18px auto 4px;max-width:720px;color:var(--grafite);
+  }
+  .header p{font-family:var(--sans);font-size:13.5px;color:#8a7d72;margin:6px 0 0;}
+
+  /* ---------- área (grupo) ---------- */
+  .area-tag{
+    display:inline-block;font-family:var(--sans);font-size:11px;
+    letter-spacing:2.5px;color:var(--laranja);text-transform:uppercase;
+    margin:34px 0 12px;font-weight:700;border-bottom:2px solid var(--pessego);
+    padding-bottom:6px;
+  }
+
+  /* ---------- grid de disciplinas ---------- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+  .card{
+    background:#fff;border:1px solid var(--cinza-linha);
+    border-left:5px solid var(--laranja);border-radius:12px;
+    padding:16px 16px 14px;cursor:pointer;transition:.16s;
+    display:flex;flex-direction:column;gap:8px;text-align:left;
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(11,36,50,.12);border-left-color:var(--laranja-escuro);}
+  .card .ico{font-size:26px;line-height:1;}
+  .card .nome{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--grafite);line-height:1.25;}
+  .card .meta{font-family:var(--sans);font-size:12.5px;color:#8a7d72;margin-top:auto;}
+  .card .meta b{color:var(--laranja-detalhe);}
+
+  /* ---------- detalhe da disciplina ---------- */
+  .back{
+    display:inline-flex;align-items:center;gap:7px;cursor:pointer;
+    font-family:var(--sans);font-size:13px;color:var(--navy);font-weight:600;
+    background:none;border:none;padding:8px 0;margin-top:20px;
+  }
+  .back:hover{color:var(--laranja);}
+  .disc-head{display:flex;align-items:center;gap:14px;margin:6px 0 22px;}
+  .disc-head .ico{font-size:38px;}
+  .disc-head h2{font-family:var(--serif);font-size:28px;margin:0;color:var(--grafite);}
+  .disc-head .cont{font-family:var(--sans);font-size:12.5px;color:#8a7d72;}
+
+  /* ---------- linha de assunto ---------- */
+  .assunto{
+    background:#fff;border:1px solid var(--cinza-linha);border-radius:11px;
+    padding:14px 16px;margin-bottom:11px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  }
+  .assunto .titulo{font-family:var(--serif);font-size:17.5px;font-weight:700;color:var(--grafite);flex:1;min-width:180px;}
+  .assunto .titulo .disc-label{
+    display:block;font-family:var(--sans);font-size:11px;letter-spacing:1.5px;
+    text-transform:uppercase;color:var(--laranja-detalhe);font-weight:700;margin-bottom:2px;
+  }
+  .btns{display:flex;gap:8px;flex-wrap:wrap;}
+  .btn{
+    font-family:var(--sans);font-size:12.5px;font-weight:600;text-decoration:none;
+    padding:8px 14px;border-radius:20px;white-space:nowrap;transition:.15s;
+    display:inline-flex;align-items:center;gap:6px;border:1.5px solid transparent;cursor:pointer;
+  }
+  .btn-resumo{background:var(--laranja);color:#fff;}
+  .btn-resumo:hover{background:var(--laranja-escuro);}
+  .btn-tec{background:#fff;color:var(--navy);border-color:var(--navy);}
+  .btn-tec:hover{background:var(--navy);color:#fff;}
+  .btn-pendente{background:var(--zebra);color:#a89b8e;border-color:var(--cinza-linha);cursor:default;}
+
+  /* ---------- estados vazios ---------- */
+  .vazio{
+    background:var(--creme-revisao);border:1px dashed var(--laranja);
+    border-radius:12px;padding:22px;font-family:var(--sans);font-size:14px;
+    color:var(--grafite);line-height:1.6;
+  }
+  .vazio code{background:#fff;padding:2px 7px;border-radius:5px;font-size:12.5px;color:var(--laranja-detalhe);border:1px solid var(--cinza-linha);}
+
+  /* ---------- instruções (rodapé) ---------- */
+  details.ajuda{
+    margin-top:44px;background:#fff;border:1px solid var(--cinza-linha);
+    border-radius:12px;padding:4px 20px;
+  }
+  details.ajuda summary{
+    font-family:var(--sans);font-size:13.5px;font-weight:700;color:var(--navy);
+    cursor:pointer;padding:14px 0;list-style:none;
+  }
+  details.ajuda summary::-webkit-details-marker{display:none;}
+  details.ajuda summary::before{content:"▸ ";color:var(--laranja);}
+  details.ajuda[open] summary::before{content:"▾ ";}
+  details.ajuda .corpo{font-family:var(--sans);font-size:13.5px;line-height:1.7;padding:0 0 18px;color:var(--grafite);}
+  details.ajuda .corpo code{background:var(--zebra);padding:2px 6px;border-radius:5px;font-size:12.5px;color:var(--laranja-detalhe);}
+  details.ajuda .corpo b{color:var(--navy);}
+
+  .foot{text-align:center;font-family:var(--sans);font-size:12px;color:#b3a99e;margin-top:40px;letter-spacing:1px;}
+
+  @media(max-width:560px){
+    .header h1{font-size:24px;}
+    .assunto{flex-direction:column;align-items:flex-start;}
+    .search{max-width:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="brand" onclick="irHome()">🎈 <b>Bulle</b> Inteligente · Portal</span>
+  <span class="spacer"></span>
+  <label class="search">
+    <span class="ic">🔎</span>
+    <input id="busca" type="text" placeholder="Buscar assunto ou disciplina…" autocomplete="off">
+  </label>
+</nav>
+
+<div class="wrap">
+  <header class="header" id="cabecalho">
+    <div class="logo">Bulle Inteligente</div>
+    <div class="sub">Portal de Resumos · RFB 2027</div>
+    <h1>Meus resumos de estudo, tudo em um lugar</h1>
+    <p>Escolha a disciplina para ver os assuntos. Cada assunto abre o resumo e o caderno do TEC.</p>
+  </header>
+
+  <main id="app"><!-- render dinâmico --></main>
+
+  <details class="ajuda">
+    <summary>Como adicionar um resumo novo (ou o link do TEC)</summary>
+    <div class="corpo">
+      Abra este arquivo <code>index.html</code> e vá até o bloco <b>DADOS</b> (dentro de <code>&lt;script&gt;</code>).
+      Dentro da disciplina, adicione uma linha:<br><br>
+      <code>{ nome:"Competência Tributária", html:"direito-tributario/competencia.html", tec:"" }</code><br><br>
+      • <b>html</b> = caminho do seu resumo (deixe <code>""</code> enquanto não existir → aparece "pendente").<br>
+      • <b>tec</b> = cole aqui o link do caderno de exercícios do TEC quando tiver. Vazio = o botão some.<br><br>
+      <b>Para publicar:</b> suba este <code>index.html</code> e suas pastas no <b>GitHub Pages</b> ou no <b>Netlify Drop</b>.
+      Recomendo uma pasta por disciplina (ex.: <code>direito-tributario/</code>) e os HTMLs dentro dela — assim os caminhos acima funcionam sozinhos.
+    </div>
+  </details>
+
+  <div class="foot">◆ Bulle Inteligente ◆</div>
+</div>
+
+<script>
+/* ============================================================================
+   DADOS  —  é AQUI que você edita. Nada mais precisa ser mexido.
+   Cada assunto: { nome:"...", html:"pasta/arquivo.html", tec:"link do TEC" }
+   Deixe html:"" se o resumo ainda não existe. Deixe tec:"" se ainda não tem o caderno.
+   ============================================================================ */
+
+const AREAS = [
+  ["tributario", "Tributário & Aduaneiro"],
+  ["direito",    "Direito"],
+  ["exatas",     "Exatas & Dados"],
+  ["contabil",   "Contábil"],
+  ["linguas",    "Línguas"],
+  ["gestao",     "Gestão"],
+];
+
+const DISCIPLINAS = [
+  { nome:"Reforma Tributária",     ico:"🔄", area:"tributario", pasta:"reforma-tributaria", assuntos:[] },
+  { nome:"Legislação Aduaneira",   ico:"🛃", area:"tributario", pasta:"legislacao-aduaneira", assuntos:[] },
+  { nome:"Legislação Tributária",  ico:"📜", area:"tributario", pasta:"legislacao-tributaria", assuntos:[] },
+  { nome:"Direito Tributário",     ico:"📗", area:"tributario", pasta:"direito-tributario", assuntos:[
+      // ↓↓↓ EXEMPLO — troque pelos seus resumos (ou apague). Mostra os dois botões funcionando:
+      { nome:"Competência Tributária", html:"direito-tributario/competencia-tributaria.html", tec:"https://www.tecconcursos.com.br/" },
+      { nome:"Empréstimo Compulsório e Contribuições Especiais", html:"", tec:"" },
+  ]},
+
+  { nome:"Direito Administrativo", ico:"🏛️", area:"direito", pasta:"direito-administrativo", assuntos:[
+      { nome:"Organização Administrativa", html:"", tec:"" },
+  ]},
+  { nome:"Direito Constitucional", ico:"⚖️", area:"direito", pasta:"direito-constitucional", assuntos:[] },
+  { nome:"Direito Previdenciário", ico:"👵", area:"direito", pasta:"direito-previdenciario", assuntos:[] },
+
+  { nome:"Raciocínio Lógico",      ico:"🧩", area:"exatas", pasta:"raciocinio-logico", assuntos:[] },
+  { nome:"Estatística",            ico:"📊", area:"exatas", pasta:"estatistica", assuntos:[] },
+  { nome:"Fluência de Dados",      ico:"💾", area:"exatas", pasta:"fluencia-de-dados", assuntos:[] },
+
+  { nome:"Contabilidade",          ico:"🧮", area:"contabil", pasta:"contabilidade", assuntos:[] },
+
+  { nome:"Português",              ico:"✍️", area:"linguas", pasta:"portugues", assuntos:[] },
+  { nome:"Inglês",                 ico:"🌐", area:"linguas", pasta:"ingles", assuntos:[] },
+
+  { nome:"Administração Pública",  ico:"🏢", area:"gestao", pasta:"administracao-publica", assuntos:[] },
+  { nome:"Administração Geral",    ico:"📋", area:"gestao", pasta:"administracao-geral", assuntos:[] },
+];
+
+/* ============================================================================
+   MOTOR — não precisa mexer daqui pra baixo.
+   ============================================================================ */
+const app = document.getElementById("app");
+const cabecalho = document.getElementById("cabecalho");
+const inputBusca = document.getElementById("busca");
+
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+function botoesAssunto(a){
+  let html = a.html
+    ? `<a class="btn btn-resumo" href="${esc(a.html)}" target="_blank" rel="noopener">📄 Abrir resumo</a>`
+    : `<span class="btn btn-pendente">⏳ Resumo pendente</span>`;
+  if(a.tec){
+    html += `<a class="btn btn-tec" href="${esc(a.tec)}" target="_blank" rel="noopener">📝 Caderno TEC</a>`;
+  }
+  return `<div class="btns">${html}</div>`;
+}
+
+function renderHome(){
+  cabecalho.style.display = "block";
+  let html = "";
+  for(const [id, rotulo] of AREAS){
+    const ds = DISCIPLINAS.filter(d => d.area === id);
+    if(!ds.length) continue;
+    html += `<div class="area-tag">${esc(rotulo)}</div><div class="grid">`;
+    for(const d of DISCIPLINAS){
+      if(d.area !== id) continue;
+      const i = DISCIPLINAS.indexOf(d);
+      const n = d.assuntos.length;
+      const prontos = d.assuntos.filter(a=>a.html).length;
+      const meta = n === 0
+        ? `<span class="meta">Nenhum resumo ainda</span>`
+        : `<span class="meta"><b>${prontos}</b> de ${n} ${n===1?"assunto":"assuntos"}</span>`;
+      html += `<div class="card" onclick="abrirDisciplina(${i})">
+                 <div class="ico">${d.ico}</div>
+                 <div class="nome">${esc(d.nome)}</div>
+                 ${meta}
+               </div>`;
+    }
+    html += `</div>`;
+  }
+  app.innerHTML = html;
+}
+
+function renderDisciplina(i){
+  const d = DISCIPLINAS[i];
+  if(!d){ irHome(); return; }
+  cabecalho.style.display = "none";
+  let corpo;
+  if(!d.assuntos.length){
+    corpo = `<div class="vazio">
+      Ainda não há resumos em <b>${esc(d.nome)}</b>.<br>
+      Adicione no bloco <b>DADOS</b> do arquivo, dentro desta disciplina, uma linha como:<br><br>
+      <code>{ nome:"Nome do assunto", html:"${esc(d.pasta)}/arquivo.html", tec:"" }</code>
+    </div>`;
+  } else {
+    corpo = d.assuntos.map(a => `
+      <div class="assunto">
+        <div class="titulo">${esc(a.nome)}</div>
+        ${botoesAssunto(a)}
+      </div>`).join("");
+  }
+  app.innerHTML = `
+    <button class="back" onclick="irHome()">← Todas as disciplinas</button>
+    <div class="disc-head">
+      <div class="ico">${d.ico}</div>
+      <div>
+        <h2>${esc(d.nome)}</h2>
+        <div class="cont">${d.assuntos.length} ${d.assuntos.length===1?"assunto":"assuntos"}</div>
+      </div>
+    </div>
+    ${corpo}`;
+  window.scrollTo({top:0});
+}
+
+function renderBusca(q){
+  cabecalho.style.display = "none";
+  const termo = q.toLowerCase();
+  const hits = [];
+  DISCIPLINAS.forEach(d => {
+    d.assuntos.forEach(a => {
+      if(a.nome.toLowerCase().includes(termo) || d.nome.toLowerCase().includes(termo)){
+        hits.push({d, a});
+      }
+    });
+  });
+  let corpo;
+  if(!hits.length){
+    corpo = `<div class="vazio">Nenhum assunto encontrado para <b>“${esc(q)}”</b>.</div>`;
+  } else {
+    corpo = hits.map(({d,a}) => `
+      <div class="assunto">
+        <div class="titulo"><span class="disc-label">${d.ico} ${esc(d.nome)}</span>${esc(a.nome)}</div>
+        ${botoesAssunto(a)}
+      </div>`).join("");
+  }
+  app.innerHTML = `<div class="area-tag">Resultados da busca</div>${corpo}`;
+}
+
+function render(){
+  const q = inputBusca.value.trim();
+  if(q){ renderBusca(q); return; }
+  const h = location.hash.replace(/^#\/?/,"");
+  if(h.startsWith("d/")){ renderDisciplina(parseInt(h.slice(2),10)); }
+  else { renderHome(); }
+}
+
+function abrirDisciplina(i){ location.hash = "#/d/" + i; }
+function irHome(){ inputBusca.value = ""; location.hash = ""; render(); }
+
+window.addEventListener("hashchange", render);
+inputBusca.addEventListener("input", render);
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPI — Fato Gerador e Base de Cálculo · Bulle Inteligente</title>
+<style>
+  :root{
+    --laranja:#E06F23;
+    --laranja-escuro:#C25E18;
+    --laranja-detalhe:#B85417;
+    --pessego:#FBE3CF;
+    --navy:#0B2432;
+    --navy-grad:#123243;
+    --grafite:#2A2320;
+    --creme-banca:#FCF6E3;
+    --creme-revisao:#FCEBDD;
+    --branco:#ffffff;
+    --cinza-linha:#ece4dc;
+    --zebra:#faf5ef;
+    --verde:#2e7d4f;
+    --verde-bg:#e5f4ea;
+    --vermelho:#c0392b;
+    --vermelho-bg:#fbe9e7;
+    --serif:Georgia,'Times New Roman',serif;
+    --sans:'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:var(--serif);
+    color:var(--grafite);
+    background:#fdfbf8;
+    line-height:1.7;
+    font-size:17px;
+  }
+  a{color:inherit;}
+
+  /* ---------- 1. NAV (azul-marinho) ---------- */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    background:linear-gradient(90deg,var(--navy),var(--navy-grad));
+    color:#eaf1f5;
+    display:flex;align-items:center;gap:6px;
+    padding:10px 18px;
+    flex-wrap:wrap;
+    box-shadow:0 2px 14px rgba(0,0,0,.18);
+  }
+  .nav .brand{
+    font-family:var(--sans);font-weight:700;letter-spacing:.5px;
+    color:#fff;margin-right:14px;font-size:15px;white-space:nowrap;
+  }
+  .nav .brand b{color:var(--laranja);}
+  .nav-links{display:flex;gap:4px;flex-wrap:wrap;flex:1;}
+  .nav-links a{
+    font-family:var(--sans);font-size:12.5px;text-decoration:none;
+    color:#cfe0ea;padding:6px 11px;border-radius:20px;
+    transition:.15s;white-space:nowrap;
+  }
+  .nav-links a:hover{background:rgba(224,111,35,.22);color:#fff;}
+  .nav .immersion{
+    font-family:var(--sans);font-size:12.5px;cursor:pointer;
+    background:var(--laranja);color:#fff;border:none;
+    padding:7px 14px;border-radius:20px;font-weight:600;white-space:nowrap;
+    transition:.15s;
+  }
+  .nav .immersion:hover{background:var(--laranja-escuro);}
+
+  /* ---------- layout ---------- */
+  .wrap{max-width:860px;margin:0 auto;padding:0 22px 90px;}
+
+  /* ---------- 2. Cabeçalho ---------- */
+  .header{text-align:center;padding:46px 10px 30px;}
+  .header .logo{
+    font-family:var(--serif);font-size:30px;font-weight:700;
+    color:var(--laranja);letter-spacing:.5px;
+  }
+  .header .sub{
+    font-family:var(--sans);font-size:11px;letter-spacing:3px;
+    color:#8a7d72;margin-top:6px;text-transform:uppercase;
+  }
+  .tag{
+    display:inline-block;font-family:var(--sans);font-size:11px;
+    letter-spacing:2.5px;color:var(--laranja);text-transform:uppercase;
+    margin:26px 0 10px;font-weight:700;
+  }
+  .header h1{
+    font-family:var(--serif);font-size:30px;line-height:1.25;
+    margin:6px auto 0;max-width:720px;color:var(--grafite);
+  }
+
+  /* ---------- badges de bloco ---------- */
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:1px;
+    background:var(--laranja);color:#fff;text-transform:uppercase;
+    padding:8px 16px;border-radius:8px;margin:0 0 4px;
+  }
+
+  /* ---------- 3. Como estudar ---------- */
+  .quote-box{
+    border-left:4px solid var(--laranja);
+    background:#fff;border-radius:0 10px 10px 0;
+    padding:20px 24px;margin:16px 0 8px;font-style:italic;
+    box-shadow:0 2px 10px rgba(0,0,0,.04);color:#4a4038;
+  }
+  .quote-box::before{content:"\201C";color:var(--pessego);
+    font-size:52px;font-family:Georgia;line-height:0;vertical-align:-18px;margin-right:6px;}
+
+  /* ---------- 4. Seções de conteúdo ---------- */
+  .secao{
+    border-left:4px solid var(--laranja);
+    padding:4px 0 4px 22px;margin:40px 0;
+  }
+  .secao > h2{
+    font-family:var(--serif);color:var(--laranja);font-size:24px;
+    margin:0 0 4px;padding-bottom:10px;
+    border-bottom:2px solid var(--cinza-linha);
+  }
+  .secao > h2 .lei{font-family:var(--sans);font-size:13px;color:#9a8b7d;font-weight:400;}
+  .secao p{margin:14px 0;}
+  .dropcap::first-letter{
+    font-family:var(--serif);float:left;color:var(--laranja);
+    font-size:62px;line-height:.8;padding:6px 10px 0 0;font-weight:700;
+  }
+  .secao h3{font-family:var(--serif);color:var(--laranja-detalhe);font-size:18px;margin:22px 0 6px;}
+  .secao ul{margin:12px 0;padding-left:22px;}
+  .secao li{margin:8px 0;}
+  .secao li b, .secao p b{color:var(--grafite);}
+  mark{background:var(--pessego);color:var(--grafite);padding:1px 5px;border-radius:4px;}
+
+  /* macete / mnemônico */
+  .macete{
+    background:#fff;border:1.5px dashed var(--laranja);
+    border-radius:10px;padding:12px 16px;margin:16px 0;
+    font-family:var(--serif);
+  }
+  .macete .pill{
+    display:inline-block;font-family:'Courier New',monospace;font-weight:700;
+    background:var(--laranja-escuro);color:#fff;padding:3px 10px;border-radius:6px;
+    margin-right:8px;font-size:14px;
+  }
+  .macete b{color:var(--laranja-detalhe);}
+
+  /* nota de jurisprudência */
+  .nota-juris{
+    font-style:italic;color:#5a4f45;background:#fbf7f2;
+    border-left:3px solid var(--pessego);padding:10px 16px;margin:14px 0;border-radius:0 8px 8px 0;
+  }
+
+  /* Caixa "Como a banca derruba" — assinatura */
+  .banca{
+    background:var(--creme-banca);border:1px solid #eadfba;
+    border-radius:10px;padding:14px 18px;margin:18px 0;
+  }
+  .banca .titulo{
+    font-family:var(--sans);font-weight:700;color:var(--laranja-detalhe);
+    font-size:13px;letter-spacing:.5px;margin-bottom:6px;
+  }
+  .banca .correcao{margin-top:8px;padding-top:8px;border-top:1px dashed #e0d4a8;}
+  .banca .correcao b{color:var(--verde);}
+
+  /* ---------- tabelas ---------- */
+  table.comp{width:100%;border-collapse:collapse;margin:16px 0;font-size:15.5px;
+    box-shadow:0 2px 12px rgba(0,0,0,.05);border-radius:10px;overflow:hidden;font-family:var(--sans);}
+  table.comp caption{
+    caption-side:top;text-align:left;font-family:var(--serif);font-weight:700;
+    color:var(--laranja-detalhe);font-size:16px;margin-bottom:8px;
+  }
+  table.comp th{background:var(--laranja);color:#fff;padding:11px 14px;text-align:left;font-weight:600;}
+  table.comp td{padding:11px 14px;border-top:1px solid var(--cinza-linha);vertical-align:top;}
+  table.comp tbody tr:nth-child(even){background:var(--zebra);}
+  table.comp td:first-child{font-weight:700;color:var(--grafite);}
+  table.comp .dif{background:var(--pessego);font-weight:700;}
+
+  /* ---------- 6. Revisão rápida ---------- */
+  .revisao{background:#fff;border-radius:12px;padding:22px 24px;margin:16px 0;
+    box-shadow:0 2px 12px rgba(0,0,0,.05);}
+  .revisao h3{font-family:var(--serif);color:var(--laranja);font-size:18px;margin:20px 0 6px;}
+  .revisao h3:first-child{margin-top:0;}
+  .revisao ul{padding-left:20px;margin:8px 0;}
+  .revisao li{margin:7px 0;}
+  .pegadinhas-foco{
+    background:var(--creme-revisao);border-radius:10px;padding:16px 20px;margin-top:20px;
+    border:1px solid #f2d9c4;
+  }
+  .pegadinhas-foco .titulo{font-family:var(--sans);font-weight:700;color:var(--laranja-detalhe);
+    letter-spacing:.5px;margin-bottom:8px;font-size:13px;}
+
+  /* ---------- 7. Checklist do Uber ---------- */
+  .intro{color:#6a5f54;font-style:italic;margin:10px 0 18px;}
+  #checklist{display:grid;gap:10px;}
+  .card-check{
+    display:flex;gap:14px;align-items:center;background:#fff;border-radius:10px;
+    padding:12px 16px;box-shadow:0 1px 8px rgba(0,0,0,.05);border-left:3px solid var(--laranja);
+  }
+  .card-check .num{
+    font-family:'Courier New',monospace;font-weight:700;color:#fff;background:var(--laranja);
+    min-width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;
+  }
+  .card-check .txt{font-size:15.5px;}
+
+  /* ---------- 8. Fixação / quiz ---------- */
+  .timer{display:inline-block;font-family:'Courier New',monospace;background:var(--navy);color:#fff;
+    padding:6px 14px;border-radius:8px;margin:4px 0 14px;font-size:15px;}
+  .card-q{background:#fff;border-radius:12px;padding:18px 20px;margin:14px 0;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);border:1px solid #f0e8e0;}
+  .card-q.acertou{border-color:var(--verde);}
+  .card-q.errou{border-color:var(--vermelho);}
+  .card-q .rot{font-family:var(--sans);font-size:12px;letter-spacing:1px;color:var(--laranja);
+    font-weight:700;text-transform:uppercase;}
+  .card-q .enun{margin:8px 0 14px;}
+  .card-q .btns{display:flex;gap:10px;}
+  .card-q .btns button{
+    font-family:var(--sans);font-weight:700;cursor:pointer;border:2px solid var(--cinza-linha);
+    background:#fff;padding:9px 20px;border-radius:8px;font-size:14px;transition:.12s;color:var(--grafite);
+  }
+  .card-q .btns button:hover{border-color:var(--laranja);}
+  .card-q .btns button.sel-certo{background:var(--verde-bg);border-color:var(--verde);color:var(--verde);}
+  .card-q .btns button.sel-errado{background:var(--vermelho-bg);border-color:var(--vermelho);color:var(--vermelho);}
+  .card-q .btns button:disabled{cursor:default;opacity:.85;}
+  .card-q .exp{display:none;margin-top:14px;padding:12px 16px;border-radius:8px;font-size:15px;
+    background:#faf6f1;border-left:3px solid var(--laranja);}
+  .card-q .exp.show{display:block;}
+  .card-q .exp .verdict{font-family:var(--sans);font-weight:700;font-size:13px;margin-bottom:4px;}
+  .card-q .exp .gab{color:#5a4f45;}
+  .refazer{font-family:var(--sans);font-weight:700;cursor:pointer;background:var(--laranja);color:#fff;
+    border:none;padding:11px 22px;border-radius:8px;margin-top:16px;font-size:14px;}
+  .refazer:hover{background:var(--laranja-escuro);}
+  .placar{font-family:var(--sans);font-weight:700;color:var(--laranja-detalhe);margin-top:14px;}
+
+  /* ---------- 9. Explica pra criança ---------- */
+  .feynman{background:#fffaf4;border:2px solid var(--pessego);border-radius:14px;padding:24px 26px;margin:16px 0;}
+  .feynman ul{list-style:none;padding:0;margin:0;}
+  .feynman li{margin:16px 0;padding-left:26px;position:relative;font-size:17px;line-height:1.8;}
+  .feynman li::before{content:"\1F5E3";position:absolute;left:0;top:2px;font-size:15px;}
+  .feynman li b{color:var(--laranja-detalhe);}
+  .feynman .resumo{margin-top:20px;padding:14px 18px;background:var(--pessego);border-radius:10px;
+    font-weight:700;font-style:italic;color:var(--grafite);}
+
+  /* ---------- 10. Concluir ---------- */
+  .concluir{text-align:center;padding:40px 10px 10px;}
+  .concluir p{color:#6a5f54;font-style:italic;}
+  .btn-concluir{font-family:var(--sans);font-weight:700;cursor:pointer;background:var(--laranja);color:#fff;
+    border:none;padding:14px 30px;border-radius:10px;font-size:15px;margin:10px 0;transition:.15s;}
+  .btn-concluir:hover{background:var(--laranja-escuro);}
+  .btn-concluir.feito{background:var(--verde);}
+  .assinatura{font-family:var(--serif);color:var(--laranja);letter-spacing:2px;margin-top:24px;font-size:15px;}
+
+  /* ---------- Modo imersão ---------- */
+  body.imersao .nav-links{display:none;}
+  body.imersao .wrap{max-width:940px;}
+
+  @media(max-width:640px){
+    body{font-size:16px;}
+    .header h1{font-size:24px;}
+    .secao > h2{font-size:21px;}
+    table.comp{font-size:14px;}
+    .nav .brand{width:100%;margin-bottom:6px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 1. NAV ============ -->
+<nav class="nav">
+  <span class="brand">Bulle <b>Inteligente</b></span>
+  <div class="nav-links" id="navLinks"></div>
+  <button class="immersion" onclick="document.body.classList.toggle('imersao')">⛶ Modo imersão</button>
+</nav>
+
+<div class="wrap">
+
+  <!-- ============ 2. CABEÇALHO ============ -->
+  <header class="header">
+    <div class="logo">Bulle Inteligente</div>
+    <div class="sub">Material de estudo · Mentoria</div>
+    <div class="tag">— Tarefa de estudo</div>
+    <h1>02 · Receita Federal (Analista Tributário) · Legislação Tributária · 02 · IPI — Fato Gerador e Base de Cálculo</h1>
+  </header>
+
+  <!-- ============ 3. COMO ESTUDAR ============ -->
+  <section id="como-estudar">
+    <div class="badge">📖 Como estudar 02</div>
+    <div class="quote-box">Pronto(a) pra esse tema? Nós da Bulle Inteligente pegamos o essencial e organizamos do jeito que cola na sua cabeça. Esse assunto é campeão de FGV: <b>desembaraço + saída</b> valem quase 60% das questões de Fato Gerador, e a <b>regra geral do valor tributável</b> puxa a Base de Cálculo. Foque nos momentos de ficção legal e nas pegadinhas de "média × mediana" e "atacadista × varejista".</div>
+  </section>
+
+  <!-- ============ 4. SEÇÕES DE CONTEÚDO ============ -->
+  <!-- INICIO CONTEUDO -->
+
+  <section class="secao" id="secao-1">
+    <h2>CTN × RIPI: quantos fatos geradores? <span class="lei">(CTN, art. 46; RIPI, art. 35)</span></h2>
+    <p class="dropcap">O ponto de partida é que o <b>CTN define, como norma geral</b>, os fatos geradores do IPI, mas a instituição concreta do imposto depende do <b>exercício da competência pela União</b>. Por isso há diferença prática entre o que o CTN prevê e o que o regulamento cobra.</p>
+    <ul>
+      <li><b>CTN (art. 46) — três hipóteses:</b> I - <mark>desembaraço aduaneiro</mark>, quando de procedência estrangeira; II - <mark>saída</mark> dos estabelecimentos (industrial e equiparado); III - <mark>arrematação</mark>, quando apreendido ou abandonado e levado a leilão.</li>
+      <li><b>RIPI (art. 35) — na prática, dois:</b> I - desembaraço aduaneiro de produto estrangeiro; II - saída de produto do estabelecimento industrial ou equiparado a industrial.</li>
+      <li><b>A diferença é a arrematação:</b> ela aparece no CTN, mas <mark>não houve incidência efetivamente instituída</mark> sobre essa situação no regulamento. Na prática, não há IPI sobre a arrematação.</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">CTN = DAS</span> No <b>CTN</b> são três: <b>D</b>esembaraço, <b>A</b>rrematação e <b>S</b>aída. Já o <b>RIPI</b> só trabalha com <b>DUAS</b> (cai a arrematação).
+    </div>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma, "conforme o regulamento", que a arrematação de produto apreendido/abandonado em leilão é fato gerador do IPI.
+      <div class="correcao"><b>Correto:</b> a arrematação está no <b>CTN</b> (art. 46, III), mas <b>não foi instituída como fato gerador no RIPI</b>. Se a prova pedir "conforme o CTN", ela é hipótese listada; "conforme o regulamento / na prática", não há incidência.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-2">
+    <h2>Os dois fatos geradores centrais <span class="lei">(RIPI, art. 35, 38 e 39)</span></h2>
+    <p class="dropcap">O regulamento consolida dois fatos geradores: <b>(i)</b> o <mark>desembaraço aduaneiro</mark> de produto estrangeiro e <b>(ii)</b> a <mark>saída</mark> de produto do estabelecimento industrial ou equiparado a industrial. A ligação com o sujeito passivo é direta: o <b>importador</b> é contribuinte no desembaraço; o <b>industrial e o equiparado</b> são contribuintes na saída.</p>
+    <h3>Extravio ou avaria não afastam o fato gerador</h3>
+    <ul>
+      <li>Pelo <b>parágrafo único do art. 35</b>, considera-se ocorrido o desembaraço da mercadoria que <b>constar como importada</b> e cujo <mark>extravio ou avaria</mark> venham a ser apurados pela autoridade fiscal.</li>
+      <li>Isso vale <mark>inclusive</mark> quando a mercadoria estava sob <b>regime suspensivo de tributação</b>.</li>
+    </ul>
+    <h3>Irrelevância da finalidade e do título jurídico</h3>
+    <ul>
+      <li>Pelo <b>art. 39</b>, o imposto é devido <mark>sejam quais forem as finalidades</mark> a que se destine o produto ou o <b>título jurídico</b> da importação/saída.</li>
+      <li>Não afasta o IPI alegar doação, comodato, uso próprio ou outra destinação. O que importa é a <b>ocorrência do fato gerador</b>.</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">EXtravio não EXime</span> Se a mercadoria <b>consta como importada</b>, extravio/avaria não tiram o FG — <b>mesmo em regime suspensivo</b>.
+    </div>
+    <p class="nota-juris">STF (RE 723.651/RS, repercussão geral): reconheceu a incidência do IPI na importação por <b>pessoa física para uso próprio</b>, com base na isonomia e sem afronta à não cumulatividade; a decisão alcança importações anteriores porque não houve modulação.</p>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que importação para <b>uso próprio</b> (inclusive por pessoa física) <b>não sofre IPI</b>.
+      <div class="correcao"><b>Correto:</b> a regra é o oposto — o IPI é devido independentemente da finalidade; o STF confirmou a incidência na importação por pessoa física para uso próprio.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-3">
+    <h2>Momentos específicos — ficção legal <span class="lei">(RIPI, art. 36 e 37)</span></h2>
+    <p class="dropcap">Além do "desembaraço" e da "saída", o regulamento define situações em que, por <b>técnica de incidência e controle</b>, o fato gerador é considerado ocorrido em <mark>momentos específicos</mark>. A banca adora mudar o "local" da saída, antecipar o marco temporal ou fingir que uma etapa foi suprimida.</p>
+    <table class="comp">
+      <caption>Situação × Momento em que o FG se considera ocorrido</caption>
+      <thead><tr><th>Situação típica</th><th>Momento considerado</th></tr></thead>
+      <tbody>
+        <tr><td>Venda por intermédio de ambulantes</td><td class="dif">Na entrega ao comprador</td></tr>
+        <tr><td>Produto em armazém-geral/depositário entregue direto a outro estabelecimento</td><td>Na saída do armazém-geral/depositário</td></tr>
+        <tr><td>Importação com remessa direta a terceiros, por ordem do importador</td><td class="dif">Na saída da repartição que promoveu o desembaraço</td></tr>
+        <tr><td>Industrialização por encomenda com remessa direta a outro estabelecimento</td><td>Na saída do executor direto para o outro estabelecimento</td></tr>
+        <tr><td>Nota fiscal emitida e produto não saiu</td><td class="dif">No 4º dia da emissão (dias corridos)</td></tr>
+        <tr><td>Industrialização fora do estabelecimento, no local de consumo</td><td>Quando concluída a operação (entrega ou início do consumo, o que ocorrer 1º)</td></tr>
+        <tr><td>Papel imune em finalidade diversa ou remetido a não jornal/editor</td><td>No início do consumo em finalidade diversa; ou na saída p/ pessoa não habilitada</td></tr>
+        <tr><td>Empresa comercial exportadora que ativa responsabilidade (IPI suspenso)</td><td class="dif">Na data da emissão da nota fiscal pelo industrial</td></tr>
+        <tr><td>Produto vendido e consumido/utilizado dentro do estabelecimento industrial</td><td>No momento da venda</td></tr>
+        <tr><td>Mercadoria importada abandonada em recinto alfandegado (decurso do prazo)</td><td>Na data do vencimento do prazo de permanência</td></tr>
+      </tbody>
+    </table>
+    <div class="macete">
+      <span class="pill">4 DIAS CORRIDOS</span> NF emitida e produto parado → FG no <b>4º dia da emissão</b>, contado em <b>dias corridos</b> (não "dia útil"). Se sair antes, vale a <b>data da saída</b>.
+    </div>
+    <p class="nota-juris">Regra geral e exceção na importação: em regra, o produto importado passa pelo estabelecimento do importador → <b>dois FGs</b> (desembaraço + saída do estabelecimento). Se <b>não transitar</b> e for remetido direto a terceiros, mantém-se a dupla incidência, sendo o 2º marco a <b>saída da repartição</b> que promoveu o desembaraço.</p>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que, na venda de produto <b>consumido dentro do próprio estabelecimento</b> industrial, o FG ocorre no "último dia útil do mês" ou "no décimo dia do mês seguinte".
+      <div class="correcao"><b>Correto:</b> o FG ocorre <b>no momento da venda</b> (art. 36, XI). "Décimo dia do mês seguinte" é referência de prazo de recolhimento, não de ocorrência do fato gerador.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-4">
+    <h2>Hipóteses de NÃO ocorrência do fato gerador <span class="lei">(RIPI, art. 38)</span></h2>
+    <p class="dropcap">Há situações que <mark>não constituem fato gerador</mark> por exclusão expressa do campo de incidência: o regulamento retira hipóteses que, à primeira vista, pareceriam desembaraço ou saída. Vale separar por "desembaraço" e por "saída".</p>
+    <h3>No desembaraço (art. 38, I) — retorno de produto nacional</h3>
+    <ul>
+      <li>Não é FG o desembaraço de <b>produto nacional que retorne ao Brasil</b>: (a) consignação ao exterior <mark>não vendida</mark> nos prazos; (b) <b>defeito técnico</b> que exija devolução/reparo/substituição; (c) modificações na sistemática de importação do país importador; (d) <b>guerra ou calamidade pública</b>; (e) outros fatores alheios à vontade do exportador.</li>
+      <li>Some-se a isso o retorno de mercadoria sob <b>exportação temporária</b>: se a exportação não foi definitiva, não se tributa o retorno — ainda que tenha havido descumprimento do regime.</li>
+    </ul>
+    <h3>Nas saídas subsequentes à primeira (art. 38, II)</h3>
+    <ul>
+      <li><b>Locação/arrendamento:</b> o IPI incide na <mark>primeira saída</mark>; as saídas seguintes ficam fora, <b>salvo nova industrialização</b>.</li>
+      <li><b>Bens do ativo permanente para prestação de serviços</b> pela própria firma: incide na 1ª saída; subsequentes não constituem FG.</li>
+    </ul>
+    <h3>Outras exclusões</h3>
+    <ul>
+      <li><b>Ativo permanente após 5 anos (art. 38, III):</b> não é FG a saída de bem incorporado ao ativo permanente <mark>após 5 anos da incorporação</mark>, pelo estabelecimento que o industrializou/importou.</li>
+      <li><b>Mudança de endereço (art. 38, IV):</b> a saída de produtos por motivo de mudança de endereço do estabelecimento não é FG.</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">5 ANOS = INCORPORAÇÃO</span> A marca é <b>5 anos após a incorporação</b> ao ativo permanente — <b>não</b> 5 anos após a compra, nem após a industrialização.
+    </div>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que a saída de bem do ativo permanente é isenta/não tributada após "cinco anos da compra" ou "da industrialização".
+      <div class="correcao"><b>Correto:</b> o marco é <b>cinco anos da incorporação</b> ao ativo permanente (art. 38, III). Trocar a referência temporal é a pegadinha clássica.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-5">
+    <h2>Base de cálculo: valor tributável, TIPI e tipos de alíquota <span class="lei">(RIPI, art. 189)</span></h2>
+    <p class="dropcap">A base de cálculo <b>quantifica o imposto após o fato gerador</b>. A regra geral é aplicar a <mark>alíquota da TIPI sobre o valor tributável</mark> dos produtos (art. 189). "Valor tributável" é apenas a linguagem usada para a <b>base de cálculo</b> — é sobre ele que a alíquota incide.</p>
+    <ul>
+      <li><b>Alíquotas ad valorem:</b> percentual sobre o valor. É a <mark>regra geral</mark> do IPI.</li>
+      <li><b>Alíquotas específicas (ad rem):</b> valor fixo por <b>unidade de medida</b> (kg, m³, m² etc.), usadas em situações específicas.</li>
+    </ul>
+    <h3>Alíquotas específicas (ad rem) — pontos de atenção</h3>
+    <ul>
+      <li>Quando se aplica ad rem, a base deixa de ser valor monetário e passa a ser a <b>unidade de medida</b>.</li>
+      <li>O <b>Poder Executivo</b> pode excluir/incluir produtos no regime específico; o <b>Ministro da Fazenda</b> pode alterar os valores conforme o mercado, mas a alteração <mark>não pode superar</mark> o que seria cobrado pela alíquota ad valorem sobre o valor tributável.</li>
+      <li>Lógica de <b>incidência única</b>: em regra o produto paga uma só vez — <b>exceto</b> na industrialização por encomenda (incidência na saída do executor e na saída do encomendante, se industrial/equiparado, ainda que filial).</li>
+      <li>Na incidência única: nacionais → tributação na saída; estrangeiros → tributação no <mark>desembaraço</mark> (1º fato gerador).</li>
+    </ul>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que, no regime de incidência única sobre produto estrangeiro, a tributação se concentra na <b>saída do estabelecimento</b> (segundo fato gerador).
+      <div class="correcao"><b>Correto:</b> para produto estrangeiro sob esse regime, a incidência se concentra no <b>primeiro fato gerador (desembaraço aduaneiro)</b>, não no segundo.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-6">
+    <h2>Valor tributável no CTN e no RIPI <span class="lei">(CTN, art. 47; RIPI, art. 190 e 192)</span></h2>
+    <p class="dropcap">Tanto o CTN quanto o RIPI organizam a base <b>conforme a procedência do produto</b> e o fato gerador. Guarde as duas leituras — a prova alterna entre elas.</p>
+    <h3>No CTN (art. 47)</h3>
+    <ul>
+      <li><b>Desembaraço:</b> base é o <mark>preço normal</mark> (valor aduaneiro), acrescido de <b>Imposto de Importação</b>, taxas de entrada e encargos cambiais efetivamente pagos ou exigíveis.</li>
+      <li><b>Saída do estabelecimento contribuinte:</b> base é o <b>valor da operação</b>; se não houver, o <mark>preço corrente</mark> no <b>mercado atacadista da praça do remetente</b>.</li>
+    </ul>
+    <h3>No RIPI (art. 190) — valor tributável</h3>
+    <ul>
+      <li><b>Estrangeiros:</b> no despacho, base é o valor dos tributos aduaneiros + tributos + encargos cambiais; na saída do equiparado, o <b>valor total da operação</b>.</li>
+      <li><b>Nacionais:</b> <b>valor total da operação</b> de que decorre a saída do estabelecimento industrial ou equiparado.</li>
+      <li>No "valor total da operação" entram <mark>frete e demais despesas acessórias</mark> cobradas/debitadas ao comprador. Regra prática: <b>frete sempre é relevante</b> quando a base é valor da operação.</li>
+      <li><b>Sem preço (art. 192):</b> locação, arrendamento, doação e outras operações sem transferência de propriedade → base é o <b>preço corrente no mercado atacadista da praça do remetente</b>.</li>
+      <li><b>Automóveis (venda direta ao consumidor):</b> pode-se excluir da base os valores devidos aos concessionários por intermediação/entrega, limitada a <mark>9% do valor total da operação</mark>.</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">FRETE ENTRA</span> Quando a base é <b>valor da operação</b>, frete e despesas acessórias <b>integram</b> a base. Já <b>descontos incondicionais NÃO integram</b> (STF).
+    </div>
+    <p class="nota-juris">Descontos incondicionais: o regulamento afirmava que descontos/diferenças/abatimentos não podem ser deduzidos, ainda que incondicionais. Porém, o <b>STF (RE 567.935)</b> reconheceu que descontos <b>incondicionais não integram</b> a base, e a <b>Resolução do Senado nº 1/2017</b> (CF, art. 52, X) suspendeu a execução do dispositivo em sentido contrário. Atualmente, <b>não se computam descontos incondicionais</b> na base do IPI.</p>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que, sem preço na operação, a base é o preço corrente no mercado <b>varejista</b> da praça do <b>destinatário</b>.
+      <div class="correcao"><b>Correto:</b> é o preço corrente no mercado <b>atacadista</b> (não varejista) da praça do <b>remetente</b> (não do destinatário).</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-7">
+    <h2>Recondicionamento de usado, valor mínimo e arbitramento <span class="lei">(RIPI, art. 194, 195, 197 e 198)</span></h2>
+    <p class="dropcap">Fechando a Base de Cálculo, três regimes muito cobrados: o produto <b>usado recondicionado</b>, o <b>valor tributável mínimo</b> (anti-manipulação) e o <b>arbitramento</b> pelo Fisco.</p>
+    <h3>Recondicionamento de produto usado (art. 194)</h3>
+    <ul>
+      <li>A base <mark>não é o valor integral da revenda</mark>, mas o <b>valor agregado</b>: <b>base = preço de revenda − preço de aquisição</b> (renovação/recondicionamento).</li>
+    </ul>
+    <h3>Valor tributável mínimo (art. 195)</h3>
+    <ul>
+      <li><b>Interdependência</b> ou remessa a outro estabelecimento do próprio remetente: base não inferior ao <b>preço corrente no mercado atacadista</b> da praça do remetente.</li>
+      <li><b>Remessa a estabelecimento exclusivamente varejista</b> da mesma empresa: base mínima de <mark>90% do preço de venda ao consumidor</mark>, sem ficar abaixo do preço atacadista da praça do remetente.</li>
+      <li>Usa-se a <b>média ponderada</b> dos preços em vigor no <b>mês precedente</b> à saída.</li>
+      <li><b>Café torrado</b> a varejista com moagem acessória: base mínima de <mark>70% do preço de venda a consumidor</mark> no estabelecimento moageiro.</li>
+    </ul>
+    <h3>Arbitramento (art. 197 e 198)</h3>
+    <ul>
+      <li>O Fisco pode arbitrar quando os <b>documentos forem omissos ou não merecerem fé</b>, ou em operação a <b>título gratuito</b> quando o valor for inexistente/difícil de apurar.</li>
+      <li>Importação com <b>identificação impossível</b> por extravio/consumo + descrição genérica → base arbitrada pela <mark>mediana</mark> de valores por quilograma (art. 198).</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">90 VAREJO · 70 CAFÉ</span> Valor mínimo: <b>90%</b> na remessa a varejista da mesma empresa; <b>70%</b> no café torrado com moagem. No arbitramento por quilo: <b>meDIANA</b>, não meDIA.
+    </div>
+    <p class="nota-juris">Cuidado com a "alíquota única de 80%" do regime de tributação simplificada: <b>não é "alíquota do IPI" isoladamente</b> — é alíquota única do conjunto (II, IPI, PIS/Pasep, Cofins e AFRMM).</p>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que, na importação com identificação impossível, a base arbitrada é a <b>média</b> dos valores por quilograma.
+      <div class="correcao"><b>Correto:</b> a base é arbitrada pela <b>mediana</b> de valores por quilograma (art. 198) — não confundir média com mediana.</div>
+    </div>
+  </section>
+
+  <!-- FIM CONTEUDO -->
+
+  <!-- ============ 5. QUADRO COMPARATIVO ============ -->
+  <section id="quadro-comparativo">
+    <div class="badge">📊 Quadro comparativo</div>
+    <p class="intro">Quando dá pra comparar, compara: lado a lado, o que a banca adora confundir fica fácil de fixar.</p>
+    <table class="comp">
+      <caption>Desembaraço aduaneiro × Saída do estabelecimento</caption>
+      <thead><tr><th>Critério</th><th>Desembaraço (estrangeiro)</th><th>Saída (industrial/equiparado)</th></tr></thead>
+      <tbody>
+        <tr><td>Previsão (CTN)</td><td class="dif">Art. 46, I — procedência estrangeira</td><td>Art. 46, II — saída dos estabelecimentos</td></tr>
+        <tr><td>Contribuinte típico</td><td class="dif">Importador</td><td>Industrial e equiparado</td></tr>
+        <tr><td>Momento</td><td>No ato do desembaraço, mesmo em regime suspensivo ou com extravio/avaria apurados</td><td class="dif">Na saída física; salvo ficção legal (art. 36/37)</td></tr>
+        <tr><td>Extravio/avaria</td><td class="dif">Considera-se ocorrido o FG mesmo assim (art. 35, §ú)</td><td>Não se aplica essa regra específica</td></tr>
+        <tr><td>Finalidade</td><td>Devido qualquer que seja a finalidade (inclusive uso próprio)</td><td>Devido ainda em doação, comodato ou uso próprio</td></tr>
+      </tbody>
+    </table>
+    <table class="comp">
+      <caption>Base de cálculo: importação × saída nacional</caption>
+      <thead><tr><th>Critério</th><th>Importação (despacho)</th><th>Saída nacional</th></tr></thead>
+      <tbody>
+        <tr><td>Base</td><td class="dif">Valor aduaneiro + II + taxas + encargos cambiais</td><td>Valor total da operação</td></tr>
+        <tr><td>Frete/acessórias</td><td>Já embutidos no valor aduaneiro/encargos</td><td class="dif">Integram o valor da operação</td></tr>
+        <tr><td>Sem preço</td><td>—</td><td class="dif">Preço corrente no atacado da praça do remetente (art. 192)</td></tr>
+      </tbody>
+    </table>
+    <div class="macete">
+      <span class="pill">TROCA DE COLUNA</span> A FGV troca "atacadista ↔ varejista" e "remetente ↔ destinatário". Fixe: <b>ATACADISTA</b> + <b>praça do REMETENTE</b>.
+    </div>
+  </section>
+
+  <!-- ============ 6. REVISÃO RÁPIDA ============ -->
+  <section id="revisao-rapida">
+    <div class="badge">⚡ Revisão rápida</div>
+    <p class="intro">Resumo final — 5 min antes da prova.</p>
+    <div class="revisao">
+      <h3>Conceitos-chave</h3>
+      <ul>
+        <li><b>Fatos geradores (RIPI):</b> <mark>desembaraço</mark> de estrangeiro + <mark>saída</mark> do industrial/equiparado. CTN também lista a arrematação (art. 46, III), sem incidência prática.</li>
+        <li><b>Valor tributável:</b> linguagem para "base de cálculo"; regra geral = alíquota da TIPI sobre o valor tributável (art. 189).</li>
+        <li><b>Ad valorem × ad rem:</b> percentual sobre valor × valor fixo por unidade de medida.</li>
+      </ul>
+      <h3>Regras essenciais</h3>
+      <ul>
+        <li><b>Extravio/avaria:</b> não afastam o FG se a mercadoria consta como importada — <mark>inclusive em regime suspensivo</mark> (art. 35, §ú).</li>
+        <li><b>Finalidade é irrelevante</b> (art. 39): importação para uso próprio incide (STF RE 723.651/RS).</li>
+        <li><b>NF parada:</b> FG no <mark>4º dia da emissão</mark>, dias corridos (art. 36, VI).</li>
+        <li><b>Não ocorrência (art. 38):</b> retorno de nacional; saídas subsequentes à 1ª (locação; ativo p/ serviço); ativo <mark>após 5 anos da incorporação</mark>; mudança de endereço.</li>
+        <li><b>Base na saída:</b> valor da operação com <b>frete</b>; sem preço → atacadista da praça do <b>remetente</b> (art. 192).</li>
+        <li><b>Valor mínimo:</b> <mark>90%</mark> varejista da mesma empresa; <mark>70%</mark> café torrado. Média ponderada do mês precedente.</li>
+        <li><b>Arbitramento:</b> documentos sem fé / título gratuito; importação impossível → <mark>mediana</mark> por quilo (art. 198).</li>
+      </ul>
+      <div class="pegadinhas-foco">
+        <div class="titulo">◎ Pegadinhas-foco & jurisprudência</div>
+        <ul>
+          <li>Arrematação: fato gerador no <b>CTN</b>, mas não no <b>RIPI</b> (sem incidência prática).</li>
+          <li>Ativo permanente: 5 anos contam da <b>incorporação</b>, não da compra/industrialização.</li>
+          <li>Base sem preço: <b>atacadista</b> + praça do <b>remetente</b> (não varejista/destinatário).</li>
+          <li>Arbitramento por quilo: <b>mediana</b>, não média.</li>
+          <li>Descontos incondicionais <b>não integram</b> a base (STF RE 567.935; Res. Senado 1/2017).</li>
+          <li>STF RE 723.651/RS: incide IPI na importação por <b>pessoa física para uso próprio</b>.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. ÚLTIMA PASSADA ============ -->
+  <section id="ultima-passada">
+    <div class="badge">🚕 Última passada</div>
+    <p class="intro">Pontos curtos pra você revisar a caminho da prova. Cada um é um item-chave já estudado — ativa a memória sem precisar abrir caderno.</p>
+    <div id="checklist"></div>
+  </section>
+
+  <!-- ============ 8. FIXAÇÃO ============ -->
+  <section id="fixacao">
+    <div class="badge">◎ Fixação</div>
+    <p class="intro">Pra fixar mesmo: responda no padrão Cebraspe. Cada item já vem com explicação do "por que" pós-resposta.</p>
+    <span class="timer" id="timer">⏱ 00:00</span>
+    <div id="quiz"></div>
+    <div class="placar" id="placar"></div>
+    <button class="refazer" onclick="resetQuiz()">↺ Refazer quiz</button>
+  </section>
+
+  <!-- ============ 9. EXPLICA PRA CRIANÇA ============ -->
+  <section id="explica-crianca">
+    <div class="badge">🗣️ Explica pra criança</div>
+    <p class="intro">Se você consegue explicar pra uma criança de 12 anos, você realmente aprendeu. Leia em voz alta, no seu ritmo.</p>
+    <div class="feynman">
+      <ul>
+        <li><b>O que é o "fato gerador":</b> é o momentinho em que o imposto "nasce" (fato gerador do IPI). É tipo o apito no jogo: antes do apito não vale gol; depois do apito, valeu. No IPI, o apito toca em dois momentos: quando um produto de fora chega ao Brasil e passa pela aduana (desembaraço aduaneiro) e quando o produto sai da fábrica (saída do estabelecimento industrial).</li>
+        <li><b>A arrematação que "quase" conta:</b> a lei geral (CTN) diz que comprar em leilão coisa apreendida também toca o apito. Mas o regulamento que manda na prática (RIPI) esqueceu de ligar esse apito — então, na hora H, não paga IPI. É uma regra que aparece na lista, mas não funciona de verdade.</li>
+        <li><b>Extravio e avaria não salvam:</b> se o produto "consta como importado" e depois some ou estraga, o imposto continua devido (art. 35, parágrafo único). É como pedir um lanche: se ele já foi anotado como seu e sumiu no caminho, ainda assim você comprou.</li>
+        <li><b>Não importa pra que serve:</b> tanto faz se o produto é pra vender, pra dar de presente ou pra uso próprio — o imposto é devido do mesmo jeito (art. 39). O juiz até confirmou: comprar de fora pra usar em casa paga IPI (STF, RE 723.651/RS).</li>
+        <li><b>Nota fiscal emitida e produto parado:</b> se você "avisou" que ia vender (emitiu a nota) mas o produto ficou na prateleira, no 4º dia o apito toca sozinho — e conta dia normal, sábado e domingo incluídos (dias corridos, art. 36, VI).</li>
+        <li><b>Base de cálculo é "sobre quanto" cobra:</b> depois que o imposto nasce, precisa saber sobre qual valor calcular (base de cálculo / valor tributável). Em regra é o valor total da venda, e o <b>frete entra</b> nessa conta. Se não tem preço (empréstimo, doação), usa o preço de atacado da cidade de quem envia (praça do remetente, art. 192) — atacado, não a loja da esquina.</li>
+        <li><b>Produto usado que é reformado:</b> se você conserta um usado e revende, o imposto é só sobre o que você "acrescentou": preço de revenda menos preço de compra (art. 194). Você não paga de novo pelo que já existia.</li>
+        <li><b>Quando o fiscal "chuta" o valor:</b> se os papéis estão bagunçados ou faltando, o fiscal pode estimar o valor (arbitramento). Numa importação em que nem dá pra saber o que é, ele usa o valor "do meio" por quilo — a <b>mediana</b> (art. 198), que é o número central, não a média.</li>
+      </ul>
+      <div class="resumo">Se for pra lembrar de uma coisa só, lembra que: o IPI "nasce" em DOIS apitos — chegou de fora (desembaraço) ou saiu da fábrica (saída) — e a conta é feita sobre o valor da operação, com frete dentro e usando sempre o preço de ATACADO da cidade de quem ENVIA.</div>
+    </div>
+  </section>
+
+  <!-- ============ 10. CONCLUIR ============ -->
+  <section class="concluir">
+    <p>Marque pra contar como tópico concluído no edital e desbloquear o próximo.</p>
+    <button class="btn-concluir" onclick="this.classList.toggle('feito');this.textContent=this.classList.contains('feito')?'✓ Concluída!':'✓ Marcar como concluída'">✓ Marcar como concluída</button>
+    <div class="assinatura">◆ Bulle Inteligente ◆</div>
+  </section>
+
+</div>
+
+<script>
+/* =====================================================================
+   BLOCO DE DADOS
+   ===================================================================== */
+
+const NAV = [
+  {id:"como-estudar",       label:"Como estudar"},
+  {id:"secao-1",            label:"CTN × RIPI"},
+  {id:"secao-2",            label:"Os 2 FGs"},
+  {id:"secao-3",            label:"Momentos específicos"},
+  {id:"secao-4",            label:"Não ocorrência"},
+  {id:"secao-5",            label:"Base: conceitos"},
+  {id:"secao-6",            label:"Valor tributável"},
+  {id:"secao-7",            label:"Mínimo & arbitramento"},
+  {id:"quadro-comparativo", label:"Quadro comparativo"},
+  {id:"revisao-rapida",     label:"Revisão rápida"},
+  {id:"ultima-passada",     label:"Última passada"},
+  {id:"fixacao",            label:"Fixação"},
+  {id:"explica-crianca",    label:"Explica pra criança"},
+];
+
+const CHECKLIST = [
+  "CTN (art. 46) lista <b>3</b> fatos geradores; RIPI (art. 35) trabalha com <b>2</b> (cai a arrematação).",
+  "FGs centrais: <b>desembaraço</b> de estrangeiro e <b>saída</b> do industrial/equiparado.",
+  "Arrematação em leilão: FG no CTN, <b>sem incidência instituída</b> no RIPI.",
+  "Contribuintes: importador (desembaraço); industrial e equiparado (saída).",
+  "Extravio/avaria <b>não afastam</b> o FG se consta como importada — inclusive em regime suspensivo (art. 35, §ú).",
+  "Finalidade e título jurídico são <b>irrelevantes</b> (art. 39): doação, comodato, uso próprio incidem.",
+  "STF RE 723.651/RS: incide IPI na importação por <b>pessoa física para uso próprio</b>.",
+  "Venda por ambulantes: FG na <b>entrega ao comprador</b>.",
+  "Armazém-geral entregue direto a outro estab.: FG na <b>saída do armazém</b>.",
+  "Importação com remessa direta a terceiros: 2º marco é a <b>saída da repartição</b> do desembaraço.",
+  "Industrialização por encomenda com remessa direta: <b>dois FGs</b>, contribuintes distintos.",
+  "NF emitida e produto parado: FG no <b>4º dia da emissão</b>, dias corridos (art. 36, VI).",
+  "Produto vendido e consumido dentro do estab. industrial: FG <b>no momento da venda</b> (art. 36, XI).",
+  "Empresa comercial exportadora (IPI suspenso): FG na <b>data da emissão da nota</b> pelo industrial.",
+  "Não ocorrência: retorno de <b>produto nacional</b> (consignação, defeito, guerra etc.) e exportação temporária (art. 38, I).",
+  "Locação/arrendamento: incide na <b>1ª saída</b>; subsequentes não, salvo <b>nova industrialização</b>.",
+  "Ativo permanente após <b>5 anos da incorporação</b>: não é FG (art. 38, III).",
+  "Saída por <b>mudança de endereço</b> do estabelecimento não é FG (art. 38, IV).",
+  "Regra geral da base: alíquota da <b>TIPI</b> sobre o <b>valor tributável</b> (art. 189).",
+  "Ad valorem (percentual) × ad rem (valor fixo por unidade de medida).",
+  "Base na importação (CTN/RIPI): valor aduaneiro + II + taxas + encargos cambiais.",
+  "Base na saída: <b>valor total da operação</b>, com <b>frete</b> e despesas acessórias.",
+  "Sem preço (locação, doação): preço corrente no <b>atacadista</b> da praça do <b>remetente</b> (art. 192).",
+  "Descontos incondicionais <b>não integram</b> a base (STF RE 567.935; Res. Senado 1/2017).",
+  "Automóveis (venda direta): exclui até <b>9%</b> por intermediação/entrega dos concessionários.",
+  "Recondicionamento de usado: base = <b>revenda − aquisição</b> (art. 194).",
+  "Valor mínimo: <b>90%</b> na remessa a varejista da mesma empresa; <b>70%</b> no café torrado.",
+  "Valor mínimo usa <b>média ponderada</b> do <b>mês precedente</b>.",
+  "Arbitramento: docs sem fé / título gratuito; importação impossível → <b>mediana</b> por quilo (art. 198).",
+  "Alíquota única de 80% (regime simplificado) é do conjunto (II, IPI, PIS/Pasep, Cofins, AFRMM), não só do IPI.",
+];
+
+const QUIZ = [
+  {enun:"Segundo o CTN, o imposto sobre produtos industrializados tem como fato gerador, entre outros, a sua arrematação, quando o produto é apreendido ou abandonado e levado a leilão.", answer:true, exp:"CERTO. O art. 46, III, do CTN lista a arrematação como fato gerador. A ressalva é que o <mark>RIPI não instituiu</mark> essa incidência na prática — mas, conforme o CTN, a hipótese existe."},
+  {enun:"Conforme o regulamento do IPI, há efetiva incidência do imposto sobre a arrematação de produto apreendido ou abandonado levado a leilão.", answer:false, exp:"ERRADO. A arrematação aparece no <b>CTN</b> (art. 46, III), mas <mark>não foi instituída como fato gerador no RIPI</mark>. Na prática, não há incidência de IPI sobre a arrematação."},
+  {enun:"São fatos geradores centrais do IPI, no regulamento, o desembaraço aduaneiro de produto de procedência estrangeira e a saída de produto do estabelecimento industrial ou equiparado a industrial.", answer:true, exp:"CERTO. É a redação do art. 35 do RIPI: os dois fatos geradores efetivamente adotados."},
+  {enun:"O extravio ou a avaria da mercadoria que conste como importada afastam a ocorrência do fato gerador do IPI, salvo quando a mercadoria estiver sob regime suspensivo de tributação.", answer:false, exp:"ERRADO. É o oposto: extravio/avaria <mark>não afastam</mark> o FG se a mercadoria consta como importada e a situação é apurada pela autoridade fiscal — inclusive em regime suspensivo (art. 35, §ú)."},
+  {enun:"A importação para uso próprio, inclusive por pessoa física, está sujeita ao IPI, pois o imposto é devido independentemente da finalidade ou do título jurídico da operação.", answer:true, exp:"CERTO. O art. 39 torna irrelevante a finalidade/título, e o STF (RE 723.651/RS, repercussão geral) reconheceu a incidência na importação por pessoa física para uso próprio."},
+  {enun:"O imposto pode ser afastado quando o importador comprovar que a importação se deu por doação ou comodato, e não para revenda.", answer:false, exp:"ERRADO. A finalidade e o título jurídico são irrelevantes (art. 39). Doação, comodato ou uso próprio não afastam o IPI."},
+  {enun:"Na venda de produtos por intermédio de ambulantes, considera-se ocorrido o fato gerador do IPI na entrega ao comprador.", answer:true, exp:"CERTO. Nessa hipótese o marco é a <mark>entrega ao comprador</mark> (há dois marcos na cadeia: saída do industrial para o ambulante e entrega ao adquirente)."},
+  {enun:"Quando a nota fiscal é emitida e o produto não sai do estabelecimento, o fato gerador do IPI ocorre no décimo dia do mês seguinte à emissão.", answer:false, exp:"ERRADO. O FG ocorre no <mark>4º dia da emissão</mark>, contado em <b>dias corridos</b> (art. 36, VI). \"Décimo dia do mês seguinte\" é referência de prazo de recolhimento, não de ocorrência do FG."},
+  {enun:"A contagem do prazo para ocorrência do fato gerador quando a nota fiscal foi emitida e o produto não saiu é feita em dias úteis.", answer:false, exp:"ERRADO. São <mark>dias corridos</mark>, não dias úteis. Se o produto sair antes do 4º dia, vale a data da saída."},
+  {enun:"Quando a cerveja é comprada e consumida dentro do próprio estabelecimento industrial do fabricante, o fato gerador do IPI ocorre no momento da venda.", answer:true, exp:"CERTO. Art. 36, XI, do RIPI: nos produtos objeto de venda consumidos/utilizados dentro do estabelecimento industrial, o FG ocorre no momento da venda."},
+  {enun:"Na importação com remessa direta a terceiros, por ordem do importador, sem trânsito pelo estabelecimento do importador, elimina-se a segunda incidência, restando apenas o desembaraço.", answer:false, exp:"ERRADO. Mantém-se a <mark>dupla incidência</mark>: o 2º marco passa a ser a <b>saída da repartição</b> que promoveu o desembaraço (art. 36, III). O ajuste evita a manobra de suprimir a etapa."},
+  {enun:"Não constitui fato gerador do IPI a saída de produtos por motivo de mudança de endereço do estabelecimento.", answer:true, exp:"CERTO. É a exclusão do art. 38, IV: a mera transferência física por mudança de endereço não é saída tributável."},
+  {enun:"Nos casos de locação ou arrendamento, o IPI incide na primeira saída, e as saídas subsequentes não constituem fato gerador, salvo se o produto for submetido a nova industrialização.", answer:true, exp:"CERTO. Art. 38, II, \"a\": subsequentes à 1ª ficam fora do campo, salvo nova industrialização."},
+  {enun:"A saída de produtos incorporados ao ativo permanente não constitui fato gerador do IPI depois de cinco anos contados da data da compra do bem.", answer:false, exp:"ERRADO. O marco são <mark>cinco anos da incorporação</mark> ao ativo permanente (art. 38, III), não da compra nem da industrialização."},
+  {enun:"Não constitui fato gerador o desembaraço aduaneiro de produto nacional que retorne ao Brasil por defeito técnico que exija sua devolução para reparo ou substituição.", answer:true, exp:"CERTO. É uma das hipóteses do art. 38, I: o produto foi exportado, mas retorna por motivo alheio, sem perder a condição de nacional."},
+  {enun:"A regra geral da base de cálculo do IPI é a aplicação das alíquotas da TIPI sobre o valor tributável dos produtos.", answer:true, exp:"CERTO. É o art. 189 do RIPI. \"Valor tributável\" é a linguagem usada para a base de cálculo."},
+  {enun:"As alíquotas específicas (ad rem) do IPI correspondem a um percentual aplicado sobre o valor da operação.", answer:false, exp:"ERRADO. Ad rem é <mark>valor fixo por unidade de medida</mark> (kg, m³, m²). O percentual sobre o valor é a alíquota <b>ad valorem</b>."},
+  {enun:"No valor total da operação que serve de base ao IPI na saída incluem-se o frete e as demais despesas acessórias cobradas ou debitadas ao comprador.", answer:true, exp:"CERTO. Frete e despesas acessórias integram a base quando esta é o valor da operação (RIPI, art. 190, §1º)."},
+  {enun:"Inexistindo preço na operação (locação, doação e outras sem transferência de propriedade), a base do IPI é o preço corrente no mercado varejista da praça do destinatário.", answer:false, exp:"ERRADO. É o preço corrente no mercado <mark>atacadista</mark> da praça do <b>remetente</b> (art. 192) — não varejista nem do destinatário."},
+  {enun:"Segundo o entendimento atual, os descontos incondicionais integram a base de cálculo do IPI e não podem ser deduzidos do valor da operação.", answer:false, exp:"ERRADO. O STF (RE 567.935) reconheceu que descontos <mark>incondicionais não integram</mark> a base; a Resolução do Senado nº 1/2017 suspendeu o dispositivo em sentido contrário."},
+  {enun:"No recondicionamento ou renovação de produto usado, o IPI é calculado sobre a diferença entre o preço de aquisição e o preço de revenda.", answer:true, exp:"CERTO. Art. 194: a base é o valor agregado (revenda − aquisição), não o valor integral da revenda."},
+  {enun:"Na remessa de produto a outro estabelecimento da mesma empresa que opere exclusivamente no varejo, o valor tributável mínimo é de, no mínimo, 70% do preço de venda ao consumidor.", answer:false, exp:"ERRADO. O mínimo é de <mark>90%</mark> do preço de venda ao consumidor (art. 195, II). Os 70% referem-se ao <b>café torrado</b> remetido a varejista com moagem acessória."},
+  {enun:"Nas operações entre firmas interdependentes, o valor tributável do IPI não pode ser inferior ao preço corrente no mercado atacadista da praça do remetente.", answer:true, exp:"CERTO. É o valor tributável mínimo do art. 195, I, que impede manipulação do valor da operação."},
+  {enun:"Para determinar o valor tributável mínimo, utiliza-se a média ponderada dos preços em vigor no mês precedente ao da saída.", answer:true, exp:"CERTO. A regra manda usar a <mark>média ponderada</mark> dos preços do <b>mês precedente</b> à saída."},
+  {enun:"Na importação em que a identificação da mercadoria se torne impossível por extravio ou consumo, com descrição genérica, a base pode ser arbitrada pela média dos valores por quilograma.", answer:false, exp:"ERRADO. A base é arbitrada pela <mark>mediana</mark> dos valores por quilograma (art. 198). Não confundir média com mediana."},
+  {enun:"O Fisco pode arbitrar o valor tributável quando os documentos expedidos pelas partes forem omissos ou não merecerem fé, ressalvada a avaliação contraditória decorrente de perícia.", answer:true, exp:"CERTO. É a hipótese do art. 197: arbitramento diante de documentos omissos/sem fé ou operação a título gratuito, resguardada a avaliação contraditória."},
+];
+
+/* =====================================================================
+   MOTOR — não alterar.
+   ===================================================================== */
+document.getElementById('navLinks').innerHTML =
+  NAV.map(n=>`<a href="#${n.id}">${n.label}</a>`).join('');
+
+document.getElementById('checklist').innerHTML =
+  CHECKLIST.map((t,i)=>`<div class="card-check"><span class="num">${String(i+1).padStart(2,'0')}</span><span class="txt">${t}</span></div>`).join('');
+
+let respostas = {};
+function renderQuiz(){
+  respostas = {};
+  document.getElementById('quiz').innerHTML = QUIZ.map((q,i)=>`
+    <div class="card-q" id="q${i}">
+      <div class="rot">Questão ${String(i+1).padStart(2,'0')}</div>
+      <div class="enun">${q.enun}</div>
+      <div class="btns">
+        <button onclick="responder(${i},true)">✓ CERTO</button>
+        <button onclick="responder(${i},false)">✗ ERRADO</button>
+      </div>
+      <div class="exp" id="exp${i}">
+        <div class="verdict"></div>
+        <div class="gab">${q.exp}</div>
+      </div>
+    </div>`).join('');
+  document.getElementById('placar').textContent='';
+}
+function responder(i,escolha){
+  if(respostas[i]!==undefined) return;
+  respostas[i]=escolha;
+  const q=QUIZ[i], card=document.getElementById('q'+i);
+  const btns=card.querySelectorAll('button');
+  const acertou = escolha===q.answer;
+  btns.forEach(b=>b.disabled=true);
+  btns[escolha?0:1].classList.add(escolha?'sel-certo':'sel-errado');
+  card.classList.add(acertou?'acertou':'errou');
+  const exp=document.getElementById('exp'+i);
+  exp.querySelector('.verdict').textContent = acertou ? '✓ Você acertou' : '✗ Você errou — gabarito: '+(q.answer?'CERTO':'ERRADO');
+  exp.querySelector('.verdict').style.color = acertou ? 'var(--verde)' : 'var(--vermelho)';
+  exp.classList.add('show');
+  atualizaPlacar();
+}
+function atualizaPlacar(){
+  const total=QUIZ.length, feitas=Object.keys(respostas).length;
+  const acertos=Object.keys(respostas).filter(i=>respostas[i]===QUIZ[i].answer).length;
+  document.getElementById('placar').textContent = feitas===total ? `Você acertou ${acertos} de ${total}.` : `${feitas}/${total} respondidas · ${acertos} certas`;
+}
+function resetQuiz(){ renderQuiz(); }
+renderQuiz();
+
+let seg=0;
+setInterval(()=>{seg++;const m=String(Math.floor(seg/60)).padStart(2,'0'),s=String(seg%60).padStart(2,'0');
+  document.getElementById('timer').textContent=`⏱ ${m}:${s}`;},1000);
+</script>
+</body>
+</html>

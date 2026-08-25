@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Termos da Oração; Que; Se; Como · Bulle Inteligente</title>
+<style>
+  :root{
+    --laranja:#E06F23;
+    --laranja-escuro:#C25E18;
+    --laranja-detalhe:#B85417;
+    --pessego:#FBE3CF;
+    --navy:#0B2432;
+    --navy-grad:#123243;
+    --grafite:#2A2320;
+    --creme-banca:#FCF6E3;
+    --creme-revisao:#FCEBDD;
+    --branco:#ffffff;
+    --cinza-linha:#ece4dc;
+    --zebra:#faf5ef;
+    --verde:#2e7d4f;
+    --verde-bg:#e5f4ea;
+    --vermelho:#c0392b;
+    --vermelho-bg:#fbe9e7;
+    --serif:Georgia,'Times New Roman',serif;
+    --sans:'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:var(--serif);
+    color:var(--grafite);
+    background:#fdfbf8;
+    line-height:1.7;
+    font-size:17px;
+  }
+  a{color:inherit;}
+
+  /* ---------- 1. NAV (azul-marinho) ---------- */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    background:linear-gradient(90deg,var(--navy),var(--navy-grad));
+    color:#eaf1f5;
+    display:flex;align-items:center;gap:6px;
+    padding:10px 18px;
+    flex-wrap:wrap;
+    box-shadow:0 2px 14px rgba(0,0,0,.18);
+  }
+  .nav .brand{
+    font-family:var(--sans);font-weight:700;letter-spacing:.5px;
+    color:#fff;margin-right:14px;font-size:15px;white-space:nowrap;
+  }
+  .nav .brand b{color:var(--laranja);}
+  .nav-links{display:flex;gap:4px;flex-wrap:wrap;flex:1;}
+  .nav-links a{
+    font-family:var(--sans);font-size:12.5px;text-decoration:none;
+    color:#cfe0ea;padding:6px 11px;border-radius:20px;
+    transition:.15s;white-space:nowrap;
+  }
+  .nav-links a:hover{background:rgba(224,111,35,.22);color:#fff;}
+  .nav .immersion{
+    font-family:var(--sans);font-size:12.5px;cursor:pointer;
+    background:var(--laranja);color:#fff;border:none;
+    padding:7px 14px;border-radius:20px;font-weight:600;white-space:nowrap;
+    transition:.15s;
+  }
+  .nav .immersion:hover{background:var(--laranja-escuro);}
+
+  /* ---------- layout ---------- */
+  .wrap{max-width:860px;margin:0 auto;padding:0 22px 90px;}
+
+  /* ---------- 2. Cabeçalho ---------- */
+  .header{text-align:center;padding:46px 10px 30px;}
+  .header .logo{
+    font-family:var(--serif);font-size:30px;font-weight:700;
+    color:var(--laranja);letter-spacing:.5px;
+  }
+  .header .sub{
+    font-family:var(--sans);font-size:11px;letter-spacing:3px;
+    color:#8a7d72;margin-top:6px;text-transform:uppercase;
+  }
+  .tag{
+    display:inline-block;font-family:var(--sans);font-size:11px;
+    letter-spacing:2.5px;color:var(--laranja);text-transform:uppercase;
+    margin:26px 0 10px;font-weight:700;
+  }
+  .header h1{
+    font-family:var(--serif);font-size:30px;line-height:1.25;
+    margin:6px auto 0;max-width:720px;color:var(--grafite);
+  }
+
+  /* ---------- badges de bloco ---------- */
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:1px;
+    background:var(--laranja);color:#fff;text-transform:uppercase;
+    padding:8px 16px;border-radius:8px;margin:0 0 4px;
+  }
+
+  /* ---------- 3. Como estudar ---------- */
+  .quote-box{
+    border-left:4px solid var(--laranja);
+    background:#fff;border-radius:0 10px 10px 0;
+    padding:20px 24px;margin:16px 0 8px;font-style:italic;
+    box-shadow:0 2px 10px rgba(0,0,0,.04);color:#4a4038;
+  }
+  .quote-box::before{content:"\201C";color:var(--pessego);
+    font-size:52px;font-family:Georgia;line-height:0;vertical-align:-18px;margin-right:6px;}
+
+  /* ---------- 4. Seções de conteúdo ---------- */
+  .secao{
+    border-left:4px solid var(--laranja);
+    padding:4px 0 4px 22px;margin:40px 0;
+  }
+  .secao > h2{
+    font-family:var(--serif);color:var(--laranja);font-size:24px;
+    margin:0 0 4px;padding-bottom:10px;
+    border-bottom:2px solid var(--cinza-linha);
+  }
+  .secao > h2 .lei{font-family:var(--sans);font-size:13px;color:#9a8b7d;font-weight:400;}
+  .secao p{margin:14px 0;}
+  .dropcap::first-letter{
+    font-family:var(--serif);float:left;color:var(--laranja);
+    font-size:62px;line-height:.8;padding:6px 10px 0 0;font-weight:700;
+  }
+  .secao h3{font-family:var(--serif);color:var(--laranja-detalhe);font-size:18px;margin:22px 0 6px;}
+  .secao ul{margin:12px 0;padding-left:22px;}
+  .secao li{margin:8px 0;}
+  .secao li b, .secao p b{color:var(--grafite);}
+  mark{background:var(--pessego);color:var(--grafite);padding:1px 5px;border-radius:4px;}
+
+  /* macete / mnemônico */
+  .macete{
+    background:#fff;border:1.5px dashed var(--laranja);
+    border-radius:10px;padding:12px 16px;margin:16px 0;
+    font-family:var(--serif);
+  }
+  .macete .pill{
+    display:inline-block;font-family:'Courier New',monospace;font-weight:700;
+    background:var(--laranja-escuro);color:#fff;padding:3px 10px;border-radius:6px;
+    margin-right:8px;font-size:14px;
+  }
+  .macete b{color:var(--laranja-detalhe);}
+
+  /* nota de jurisprudência */
+  .nota-juris{
+    font-style:italic;color:#5a4f45;background:#fbf7f2;
+    border-left:3px solid var(--pessego);padding:10px 16px;margin:14px 0;border-radius:0 8px 8px 0;
+  }
+
+  /* Caixa "Como a banca derruba" — assinatura */
+  .banca{
+    background:var(--creme-banca);border:1px solid #eadfba;
+    border-radius:10px;padding:14px 18px;margin:18px 0;
+  }
+  .banca .titulo{
+    font-family:var(--sans);font-weight:700;color:var(--laranja-detalhe);
+    font-size:13px;letter-spacing:.5px;margin-bottom:6px;
+  }
+  .banca .correcao{margin-top:8px;padding-top:8px;border-top:1px dashed #e0d4a8;}
+  .banca .correcao b{color:var(--verde);}
+
+  /* ---------- tabelas ---------- */
+  table.comp{width:100%;border-collapse:collapse;margin:16px 0;font-size:15.5px;
+    box-shadow:0 2px 12px rgba(0,0,0,.05);border-radius:10px;overflow:hidden;font-family:var(--sans);}
+  table.comp caption{
+    caption-side:top;text-align:left;font-family:var(--serif);font-weight:700;
+    color:var(--laranja-detalhe);font-size:16px;margin-bottom:8px;
+  }
+  table.comp th{background:var(--laranja);color:#fff;padding:11px 14px;text-align:left;font-weight:600;}
+  table.comp td{padding:11px 14px;border-top:1px solid var(--cinza-linha);vertical-align:top;}
+  table.comp tbody tr:nth-child(even){background:var(--zebra);}
+  table.comp td:first-child{font-weight:700;color:var(--grafite);}
+  table.comp .dif{background:var(--pessego);font-weight:700;}
+
+  /* ---------- 6. Revisão rápida ---------- */
+  .revisao{background:#fff;border-radius:12px;padding:22px 24px;margin:16px 0;
+    box-shadow:0 2px 12px rgba(0,0,0,.05);}
+  .revisao h3{font-family:var(--serif);color:var(--laranja);font-size:18px;margin:20px 0 6px;}
+  .revisao h3:first-child{margin-top:0;}
+  .revisao ul{padding-left:20px;margin:8px 0;}
+  .revisao li{margin:7px 0;}
+  .pegadinhas-foco{
+    background:var(--creme-revisao);border-radius:10px;padding:16px 20px;margin-top:20px;
+    border:1px solid #f2d9c4;
+  }
+  .pegadinhas-foco .titulo{font-family:var(--sans);font-weight:700;color:var(--laranja-detalhe);
+    letter-spacing:.5px;margin-bottom:8px;font-size:13px;}
+
+  /* ---------- 7. Checklist do Uber ---------- */
+  .intro{color:#6a5f54;font-style:italic;margin:10px 0 18px;}
+  #checklist{display:grid;gap:10px;}
+  .card-check{
+    display:flex;gap:14px;align-items:center;background:#fff;border-radius:10px;
+    padding:12px 16px;box-shadow:0 1px 8px rgba(0,0,0,.05);border-left:3px solid var(--laranja);
+  }
+  .card-check .num{
+    font-family:'Courier New',monospace;font-weight:700;color:#fff;background:var(--laranja);
+    min-width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;
+  }
+  .card-check .txt{font-size:15.5px;}
+
+  /* ---------- 8. Fixação / quiz ---------- */
+  .timer{display:inline-block;font-family:'Courier New',monospace;background:var(--navy);color:#fff;
+    padding:6px 14px;border-radius:8px;margin:4px 0 14px;font-size:15px;}
+  .card-q{background:#fff;border-radius:12px;padding:18px 20px;margin:14px 0;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);border:1px solid #f0e8e0;}
+  .card-q.acertou{border-color:var(--verde);}
+  .card-q.errou{border-color:var(--vermelho);}
+  .card-q .rot{font-family:var(--sans);font-size:12px;letter-spacing:1px;color:var(--laranja);
+    font-weight:700;text-transform:uppercase;}
+  .card-q .enun{margin:8px 0 14px;}
+  .card-q .btns{display:flex;gap:10px;}
+  .card-q .btns button{
+    font-family:var(--sans);font-weight:700;cursor:pointer;border:2px solid var(--cinza-linha);
+    background:#fff;padding:9px 20px;border-radius:8px;font-size:14px;transition:.12s;color:var(--grafite);
+  }
+  .card-q .btns button:hover{border-color:var(--laranja);}
+  .card-q .btns button.sel-certo{background:var(--verde-bg);border-color:var(--verde);color:var(--verde);}
+  .card-q .btns button.sel-errado{background:var(--vermelho-bg);border-color:var(--vermelho);color:var(--vermelho);}
+  .card-q .btns button:disabled{cursor:default;opacity:.85;}
+  .card-q .exp{display:none;margin-top:14px;padding:12px 16px;border-radius:8px;font-size:15px;
+    background:#faf6f1;border-left:3px solid var(--laranja);}
+  .card-q .exp.show{display:block;}
+  .card-q .exp .verdict{font-family:var(--sans);font-weight:700;font-size:13px;margin-bottom:4px;}
+  .card-q .exp .gab{color:#5a4f45;}
+  .refazer{font-family:var(--sans);font-weight:700;cursor:pointer;background:var(--laranja);color:#fff;
+    border:none;padding:11px 22px;border-radius:8px;margin-top:16px;font-size:14px;}
+  .refazer:hover{background:var(--laranja-escuro);}
+  .placar{font-family:var(--sans);font-weight:700;color:var(--laranja-detalhe);margin-top:14px;}
+
+  /* ---------- 9. Explica pra criança ---------- */
+  .feynman{background:#fffaf4;border:2px solid var(--pessego);border-radius:14px;padding:24px 26px;margin:16px 0;}
+  .feynman ul{list-style:none;padding:0;margin:0;}
+  .feynman li{margin:16px 0;padding-left:26px;position:relative;font-size:17px;line-height:1.8;}
+  .feynman li::before{content:"\1F5E3";position:absolute;left:0;top:2px;font-size:15px;}
+  .feynman li b{color:var(--laranja-detalhe);}
+  .feynman .resumo{margin-top:20px;padding:14px 18px;background:var(--pessego);border-radius:10px;
+    font-weight:700;font-style:italic;color:var(--grafite);}
+
+  /* ---------- 10. Concluir ---------- */
+  .concluir{text-align:center;padding:40px 10px 10px;}
+  .concluir p{color:#6a5f54;font-style:italic;}
+  .btn-concluir{font-family:var(--sans);font-weight:700;cursor:pointer;background:var(--laranja);color:#fff;
+    border:none;padding:14px 30px;border-radius:10px;font-size:15px;margin:10px 0;transition:.15s;}
+  .btn-concluir:hover{background:var(--laranja-escuro);}
+  .btn-concluir.feito{background:var(--verde);}
+  .assinatura{font-family:var(--serif);color:var(--laranja);letter-spacing:2px;margin-top:24px;font-size:15px;}
+
+  /* ---------- Modo imersão ---------- */
+  body.imersao .nav-links{display:none;}
+  body.imersao .wrap{max-width:940px;}
+
+  @media(max-width:640px){
+    body{font-size:16px;}
+    .header h1{font-size:24px;}
+    .secao > h2{font-size:21px;}
+    table.comp{font-size:14px;}
+    .nav .brand{width:100%;margin-bottom:6px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 1. NAV ============ -->
+<nav class="nav">
+  <span class="brand">Bulle <b>Inteligente</b></span>
+  <div class="nav-links" id="navLinks"></div>
+  <button class="immersion" onclick="document.body.classList.toggle('imersao')">⛶ Modo imersão</button>
+</nav>
+
+<div class="wrap">
+
+  <!-- ============ 2. CABEÇALHO ============ -->
+  <header class="header">
+    <div class="logo">Bulle Inteligente</div>
+    <div class="sub">Material de estudo · Mentoria</div>
+    <div class="tag">— Tarefa de estudo</div>
+    <h1>03 · Receita Federal (Analista Tributário) · Português · Termos da Oração; Que; Se; Como</h1>
+  </header>
+
+  <!-- ============ 3. COMO ESTUDAR ============ -->
+  <section id="como-estudar">
+    <div class="badge">📖 Como estudar 03</div>
+    <div class="quote-box">Sintaxe da FGV é jogo de função, não de aparência. A mesma palavra muda de nome conforme o verbo, a preposição e a vírgula. Aqui a gente organiza esse quebra-cabeça do jeito que cola na sua cabeça: primeiro os termos, depois os três coringas — <b>se</b>, <b>que</b> e <b>como</b>. Foca nas caixas "Como a banca derruba": é ali que a FGV te pega.</div>
+  </section>
+
+  <!-- ============ 4. SEÇÕES DE CONTEÚDO ============ -->
+  <!-- INICIO CONTEUDO -->
+
+  <!-- SEÇÃO 1 -->
+  <section class="secao" id="secao-1">
+    <h2>Frase, oração e período</h2>
+    <p class="dropcap">Antes de sintaxe, três conceitos que a banca adora embaralhar. O critério de cada um é diferente — e é justamente a diferença que cai na prova.</p>
+    <ul>
+      <li><b>Frase:</b> todo enunciado que estabelece comunicação. Pode ter verbo (<i>verbal</i>) ou não (<i>nominal</i>). O que importa é o <mark>sentido</mark>. Ex.: <i>"Socorro!"</i>, <i>"Cuidado!"</i></li>
+      <li><b>Oração:</b> estrutura que gira em torno de um <mark>verbo ou locução verbal</mark>. O critério é a <b>presença do verbo</b>, não o sentido. Pode ter sujeito e predicado ou, excepcionalmente, só predicado.</li>
+      <li><b>Período:</b> a frase constituída por uma ou mais orações. <b>Simples</b> = uma só oração (também chamado <mark>oração absoluta</mark>). <b>Composto</b> = mais de uma oração.</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">FRASE≠ORAÇÃO</span> <b>Nem toda frase é oração</b> ("Alunos em concentração absoluta" — sem verbo) e <b>nem toda oração é frase</b>. Frase pede sentido; oração pede verbo.
+    </div>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que toda frase é oração porque comunica uma ideia.
+      <div class="correcao"><b>Correto:</b> frase se define pelo <b>sentido</b>; oração se define pela <b>presença de verbo</b>. Uma frase nominal ("Fogo!") comunica, mas <b>não é oração</b>.</div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 2 -->
+  <section class="secao" id="secao-2">
+    <h2>Sujeito e oração sem sujeito</h2>
+    <p class="dropcap">Sujeito é o ser do qual se diz algo; seu núcleo é a palavra-base. Pode vir em ordem direta (sujeito + predicado) ou indireta (predicado + sujeito), sem mudar a função. Ele pode ser <b>determinado</b>, <b>indeterminado</b> ou a oração pode ser <b>sem sujeito</b>.</p>
+
+    <h3>Sujeito determinado</h3>
+    <ul>
+      <li><b>Simples</b> (um núcleo) e <b>composto</b> (mais de um núcleo).</li>
+      <li><b>Expresso</b> (explícito) e <b>oculto/elíptico/desinencial</b> (deduzido do contexto ou da desinência verbal): <i>"Tomarei posse neste ano"</i> → sujeito "eu".</li>
+      <li><b>Agente</b> (pratica a ação — voz ativa), <b>paciente</b> (sofre — voz passiva) e <b>agente e paciente</b> ao mesmo tempo (voz reflexiva): <i>"Carlos trancou-se no quarto"</i>.</li>
+    </ul>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que "Alguém passará em primeiro lugar" tem sujeito indeterminado (ou oculto).
+      <div class="correcao"><b>Correto:</b> sujeito formado por <b>pronome indefinido</b> (alguém, ninguém) é <mark>sujeito simples</mark> — está expresso. Não é oculto nem indeterminado.</div>
+    </div>
+
+    <h3>Sujeito indeterminado — 3 modos</h3>
+    <div class="macete">
+      <span class="pill">3P · SE · INF</span> <b>(1)</b> verbo na 3ª pessoa do <b>plural</b> sem referência ao agente ("Aplaudiram os candidatos"); <b>(2)</b> verbo na 3ª pessoa do <b>singular + "se"</b> — índice de indeterminação, ao lado de VI/VTI ("Precisa-se de servidores"); <b>(3)</b> verbo no <b>infinitivo impessoal</b> ("Foi difícil estudar tantos anos").
+    </div>
+
+    <h3>Oração sem sujeito (verbos impessoais — 3ª pessoa do singular)</h3>
+    <ul>
+      <li><b>Haver</b> no sentido de <mark>existir</mark>: "Há alunos preparados". E transmite a impessoalidade ao auxiliar: "Disfunções graves <b>deve haver</b>" (não "devem").</li>
+      <li><b>Haver, fazer, passar, ser, estar, ir</b> indicando <mark>tempo</mark>: "Faz cinco anos...", "Há dias que...".</li>
+      <li><b>Ser</b> para distância, data ou hora — concorda com a indicação numérica: "São três horas", "São dez quilômetros".</li>
+      <li><b>Fenômenos da natureza</b>: "Choveu", "Amanheceu", "Nevou".</li>
+    </ul>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que "Choveram bênçãos sobre os aprovados" é oração sem sujeito, com verbo impessoal.
+      <div class="correcao"><b>Correto:</b> verbo de fenômeno da natureza em <b>sentido figurado</b> deixa de ser impessoal e <mark>concorda com o sujeito</mark> ("bênçãos"). Por isso o plural "choveram".</div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 3 -->
+  <section class="secao" id="secao-3">
+    <h2>Predicado</h2>
+    <p class="dropcap">Predicado é o que se declara do sujeito. Três tipos, definidos pelo núcleo: <b>nominal</b> (nome), <b>verbal</b> (verbo) e <b>verbo-nominal</b> (verbo + nome).</p>
+    <ul>
+      <li><b>Nominal:</b> núcleo é um <mark>nome</mark> (o predicativo do sujeito), ligado por <b>verbo de ligação</b>. Indica estado/qualidade: <i>"O estudante estava entusiasmado"</i>.</li>
+      <li><b>Verbal:</b> núcleo é o <mark>verbo significativo</mark>. Aparece com VI, VTD, VTI ou VTDI: <i>"Os alunos compraram os livros"</i>.</li>
+      <li><b>Verbo-nominal:</b> <mark>dois núcleos</mark> — verbo + predicativo (do sujeito ou do objeto): <i>"O aluno voltou exausto"</i> (predicativo do sujeito); <i>"Os alunos deixaram os resumos organizados"</i> (predicativo do objeto).</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">SÊ FiCa PACo</span> Verbos de ligação clássicos: <b>Ser, Estar, Parecer, Ficar, Permanecer, Continuar, Andar, Tornar-se</b>. Se o verbo só liga o sujeito a um estado, é de ligação → predicado <b>nominal</b>.
+    </div>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Em "Chamavam-lhe o Canjica", afirma que "o Canjica" é predicativo do sujeito.
+      <div class="correcao"><b>Correto:</b> o sujeito é indeterminado e "o Canjica" caracteriza o objeto ("lhe"). Logo, é <mark>predicativo do objeto</mark>, não do sujeito.</div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 4 -->
+  <section class="secao" id="secao-4">
+    <h2>Termos integrantes</h2>
+    <p class="dropcap">Completam a transitividade de verbos e nomes. São eles: complementos verbais (objeto direto e indireto), agente da passiva e complemento nominal.</p>
+
+    <h3>Objeto direto e objeto indireto</h3>
+    <ul>
+      <li><b>Objeto direto (OD):</b> completa o VTD <mark>sem preposição obrigatória</mark>; vira sujeito na voz passiva ("O livro foi lido pelo aluno").</li>
+      <li><b>OD preposicionado:</b> obrigatório com pronome oblíquo tônico ("Enganaram <b>a mim</b>") e com o relativo <b>quem</b> ("o professor <b>a quem</b> todos respeitam"). Facultativo por ênfase/eufonia ("Amar <b>a Deus</b>", "elogiou <b>a todos</b>").</li>
+      <li><b>Objeto indireto (OI):</b> completa o VTI <mark>com preposição</mark> (a, de, em, com, para, por). O pronome <b>lhe/lhes</b> exerce função de OI (= a ele, a ela...).</li>
+    </ul>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que em "os outros 85% não têm <b>a quem reclamar</b>" há objeto direto preposicionado.
+      <div class="correcao"><b>Correto:</b> a preposição "a" está ligada a <b>reclamar</b> (reclamar a alguém), e "quem" é <mark>objeto indireto</mark> — não OD preposicionado.</div>
+    </div>
+
+    <h3>Agente da passiva</h3>
+    <p>Complemento do verbo na voz passiva, regido por <b>por</b> (ou raramente <b>de</b>). Corresponde ao sujeito da voz ativa. Na passiva sintética não é expresso ("Alugam-se casas").</p>
+    <div class="macete">
+      <span class="pill">SÓ VTD/VTDI</span> <b>Só verbos com objeto DIRETO</b> viram voz passiva. Agente da passiva <b>não ocorre</b> com verbos intransitivos, transitivos indiretos nem de ligação.
+    </div>
+
+    <h3>Complemento nominal (CN)</h3>
+    <p>Completa o sentido de um <b>nome</b> (substantivo abstrato, adjetivo ou advérbio) e vem <mark>sempre regido de preposição</mark>. É o <b>alvo/paciente</b> da ação expressa pelo nome: <i>"O amor <b>à mãe</b>"</i> (o amor recai sobre a mãe).</p>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Em "Tenho necessidade de descanso", afirma que "de descanso" é objeto indireto do verbo "ter".
+      <div class="correcao"><b>Correto:</b> "ter" é VTD e o OD é "necessidade". "De descanso" completa o <b>nome</b> "necessidade" → <mark>complemento nominal</mark>. (Já em "Necessito de descanso", "necessitar" é VTI e "de descanso" vira objeto indireto.)</div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 5 -->
+  <section class="secao" id="secao-5">
+    <h2>Termos acessórios</h2>
+    <p class="dropcap">Função secundária: não são indispensáveis à compreensão, mas acrescentam informação. São adjunto adnominal, adjunto adverbial e aposto.</p>
+
+    <h3>Adjunto adnominal (AA)</h3>
+    <p>Determina e caracteriza o substantivo. Pode ser artigo, pronome, adjetivo, numeral ou <b>locução adjetiva</b>. Quando o termo preposicionado indica <mark>quem pratica/possui</mark> (relação subjetiva ou de posse), é AA — o <b>agente</b>: <i>"O amor <b>da mãe</b>"</i> (quem sente é a mãe); <i>"as virtudes <b>dos pais</b>"</i> (virtudes que pertencem aos pais).</p>
+
+    <h3>Adjunto adverbial</h3>
+    <p>Exprime circunstância a verbo, adjetivo ou advérbio: modo, tempo, negação, afirmação, dúvida, intensidade, lugar, instrumento, finalidade, meio, causa, companhia — e também <mark>assunto</mark>. Difere do OI porque <b>não completa</b> o verbo: <i>"O aluno chegou para estudar"</i> (finalidade).</p>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Em "O professor falava <b>de assuntos variados</b>", afirma que a expressão é objeto indireto.
+      <div class="correcao"><b>Correto:</b> com verbos como falar/comentar/escrever, essa expressão é <mark>adjunto adverbial de assunto</mark> (não cabe troca por "lhe"). Tem valor adverbial, não integrante.</div>
+    </div>
+
+    <h3>Aposto — explicativo × especificativo</h3>
+    <p>O aposto reitera/reforça um termo. A vírgula muda tudo:</p>
+    <ul>
+      <li><b>Explicativo</b> (com vírgula): <mark>generaliza</mark> — pressupõe que há só um. <i>"O ministro da Fazenda, Fernando Haddad, anunciou..."</i> (há um só ministro da Fazenda).</li>
+      <li><b>Especificativo/restritivo</b> (<mark>sem vírgula</mark>): identifica e restringe — há outros. <i>"O deputado federal Nikolas Ferreira..."</i> (há outros deputados).</li>
+    </ul>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que "O ex-presidente do Brasil, Lula da Silva, ..." (com vírgulas) está correto.
+      <div class="correcao"><b>Correto:</b> com vírgulas, o aposto é explicativo e <b>generaliza</b> — diria que Lula é o único ex-presidente. Como há outros, o certo é <mark>sem vírgula</mark> (aposto especificativo).</div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 6 -->
+  <section class="secao" id="secao-6">
+    <h2>Palavra "se" — 6 classificações</h2>
+    <p class="dropcap">A aposta da FGV. O segredo é sempre olhar o <b>verbo e sua transitividade</b> antes de classificar.</p>
+    <ul>
+      <li><b>Pronome reflexivo:</b> o sujeito pratica e sofre a ação (relação biunívoca): <i>"O deputado denunciou-se"</i> (função de objeto direto reflexivo).</li>
+      <li><b>Pronome/partícula apassivadora:</b> voz passiva sintética, ao lado de <mark>VTD ou VTDI</mark>; o termo seguinte é sujeito paciente: <i>"Alugam-se casas"</i> (= casas são alugadas).</li>
+      <li><b>Índice de indeterminação do sujeito:</b> ao lado de <mark>VI ou VTI</mark>, verbo na 3ª pessoa do singular: <i>"Assiste-se a novos capítulos"</i> (assistir = ver → VTI).</li>
+      <li><b>Parte integrante do verbo</b> (pronome fossilizado): verbos pronominais em que o "se" não pode sair: <i>"escandalizar-se", "sair-se", "sentar-se", "lembrar-se"</i>.</li>
+      <li><b>Partícula expletiva/de realce:</b> pode ser retirada sem prejuízo: <i>"O juiz riu-se da situação"</i>.</li>
+      <li><b>Conjunção:</b> subordinativa <b>integrante</b> ("Não sei <b>se</b> poderei") ou <b>condicional</b> ("<b>Se</b> tudo der certo...").</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">DIRETO=PASSA</span> Verbo <b>transitivo direto + se</b> → <b>apassivadora</b> (sujeito paciente existe). Verbo <b>intransitivo/transitivo indireto + se</b> → <b>índice de indeterminação</b> (sujeito some). É a transitividade que decide.
+    </div>
+    <div class="nota-juris">Cuidado com "assistir": no sentido de <b>ver</b> é VTI (índice de indeterminação com "se"); no sentido de <b>prestar assistência</b> é VTD.</div>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que em "sentar-se" e "lembrar-se" o "se" é pronome recíproco.
+      <div class="correcao"><b>Correto:</b> não há dois sujeitos agindo mutuamente. São <mark>verbos pronominais</mark> → o "se" é <b>parte integrante do verbo</b>, não recíproco.</div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 7 -->
+  <section class="secao" id="secao-7">
+    <h2>Vocábulo "que"</h2>
+    <p class="dropcap">Camaleão de várias classes. Vale conhecer todas para não cair nas trocas da banca.</p>
+    <ul>
+      <li><b>Substantivo:</b> equivale a "algo/alguma coisa"; vira monossílabo tônico (acentuado): <i>"tem um <b>quê</b> de pecado"</i>.</li>
+      <li><b>Pronome:</b> indefinido (adjunto adnominal — "<b>Que</b> aula!"), interrogativo ("<b>Que</b> aconteceu?") e relativo ("ideias <b>que</b> fazem diferença" = as quais).</li>
+      <li><b>Advérbio:</b> de intensidade (= quão/quanto): "<b>Que</b> perto está o sonho!".</li>
+      <li><b>Preposição:</b> equivale a "de/para"; liga auxiliar + principal ("Temos <b>que</b> estudar").</li>
+      <li><b>Conjunção:</b> coordenada (aditiva, explicativa, adversativa) ou subordinada (integrante, causal, consecutiva, concessiva, comparativa, final).</li>
+      <li><b>Partícula expletiva/de realce</b> ("Nós <b>é que</b> não paramos") e <b>interjeição</b> ("<b>Quê</b>?!" — acentuada).</li>
+    </ul>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que em "A verdade <b>é que</b> ninguém escapa da morte" o "é que" é apenas expletivo.
+      <div class="correcao"><b>Correto:</b> aqui "é que" <mark>não pode ser retirado</mark> — introduz a oração que funciona como <b>predicativo do sujeito</b>. Integra a estrutura, não é só ênfase.</div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 8 -->
+  <section class="secao" id="secao-8">
+    <h2>Vocábulo "como"</h2>
+    <p class="dropcap">Polissêmico: o contexto define a classe. Repare especialmente na exclamação (advérbio) versus comparação/conformidade (conjunção).</p>
+    <ul>
+      <li><b>Pronome relativo:</b> tem antecedente com ideia de "modo" (= o qual): "o único modo <b>como</b> ele se preparou".</li>
+      <li><b>Advérbio:</b> de modo ("<b>Como</b> devo estudar?") ou de intensidade, valor exclamativo (= quão/quanto): "<b>Como</b> estudou!".</li>
+      <li><b>Conjunção subordinativa:</b> causal ("<b>Como</b> se preparava, não viajou"), comparativa ("tão estudioso <b>como</b> o pai") e conformativa ("Tudo aconteceu <b>como</b> combinamos").</li>
+      <li><b>Interjeição</b> ("<b>Como?</b> Ainda não estudou?") e <b>verbo</b> comer, 1ª pessoa ("Quando estudo, <b>como</b> mais").</li>
+    </ul>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que em "<b>Como</b> as pessoas estão intolerantes hoje!" o "como" é conjunção.
+      <div class="correcao"><b>Correto:</b> em construção exclamativa é <mark>advérbio de intensidade</mark> (= quão). Conjunção seria em contexto comparativo ou conformativo.</div>
+    </div>
+  </section>
+
+  <!-- FIM CONTEUDO -->
+
+  <!-- ============ 5. QUADRO COMPARATIVO ============ -->
+  <section id="quadro-comparativo">
+    <div class="badge">📊 Quadro comparativo</div>
+    <p class="intro">Os três duelos que a FGV mais explora. Lado a lado, a troca de rótulo fica óbvia.</p>
+
+    <table class="comp">
+      <caption>Adjunto adnominal × Complemento nominal (o termo preposicionado após um nome)</caption>
+      <thead><tr><th>Critério</th><th>Adjunto adnominal (AA)</th><th>Complemento nominal (CN)</th></tr></thead>
+      <tbody>
+        <tr><td>Classe do termo</td><td class="dif">Acessório (facultativo)</td><td>Integrante (obrigatório)</td></tr>
+        <tr><td>Papel na ação</td><td class="dif">Agente / posse (quem faz)</td><td>Alvo / paciente (quem sofre)</td></tr>
+        <tr><td>Liga-se a</td><td>Qualquer substantivo</td><td>Nome abstrato, adjetivo ou advérbio</td></tr>
+        <tr><td>Exemplo</td><td>as virtudes <b>dos pais</b></td><td>a educação <b>dos filhos</b></td></tr>
+      </tbody>
+    </table>
+
+    <table class="comp">
+      <caption>Complemento nominal × Objeto indireto (ambos com preposição)</caption>
+      <thead><tr><th>Critério</th><th>Complemento nominal</th><th>Objeto indireto</th></tr></thead>
+      <tbody>
+        <tr><td>Completa o quê?</td><td class="dif">Um NOME</td><td>Um VERBO (VTI)</td></tr>
+        <tr><td>Termo que o antecede</td><td>Substantivo/adjetivo/advérbio</td><td class="dif">Verbo transitivo indireto</td></tr>
+        <tr><td>Exemplo</td><td><b>Tenho</b> necessidade <b>de descanso</b></td><td><b>Necessito de descanso</b></td></tr>
+      </tbody>
+    </table>
+
+    <table class="comp">
+      <caption>Aposto explicativo × especificativo (restritivo)</caption>
+      <thead><tr><th>Critério</th><th>Explicativo</th><th>Especificativo</th></tr></thead>
+      <tbody>
+        <tr><td>Vírgula?</td><td class="dif">Sim (entre vírgulas)</td><td>Não (proibida)</td></tr>
+        <tr><td>Efeito de sentido</td><td>Generaliza (há um só)</td><td class="dif">Restringe (há outros)</td></tr>
+        <tr><td>Exemplo</td><td>O ministro da Fazenda, Haddad,...</td><td>O deputado federal Nikolas Ferreira...</td></tr>
+      </tbody>
+    </table>
+    <div class="macete">
+      <span class="pill">SÓ-FRE=CN</span> Se o termo <b>SOFRE</b> a ação do nome → <b>Complemento Nominal</b>. Se <b>FAZ/POSSUI</b> → <b>Adjunto Adnominal</b>.
+    </div>
+  </section>
+
+  <!-- ============ 6. REVISÃO RÁPIDA ============ -->
+  <section id="revisao-rapida">
+    <div class="badge">⚡ Revisão rápida</div>
+    <p class="intro">Resumo final — 5 min antes da prova.</p>
+    <div class="revisao">
+      <h3>Conceitos-chave</h3>
+      <ul>
+        <li><b>Frase</b> = sentido; <b>oração</b> = verbo; <b>período</b> = conjunto de orações (simples/composto).</li>
+        <li><b>Termos:</b> essenciais (sujeito, predicado) · integrantes (OD, OI, agente da passiva, CN) · acessórios (AA, adj. adverbial, aposto).</li>
+        <li><b>Predicado:</b> nominal (nome + VL) · verbal (verbo) · verbo-nominal (dois núcleos).</li>
+      </ul>
+      <h3>Regras essenciais</h3>
+      <ul>
+        <li>Sujeito indeterminado: <mark>3ª pes. plural sem agente</mark>, <mark>VI/VTI + se</mark> (3ª sing.) ou <mark>infinitivo impessoal</mark>.</li>
+        <li>Partícula "se": <b>VTD/VTDI + se = apassivadora</b> (sujeito paciente); <b>VI/VTI + se = indeterminação</b>.</li>
+        <li>Só <mark>VTD e VTDI</mark> admitem voz passiva / agente da passiva.</li>
+        <li>AA = agente/posse (acessório) · CN = alvo/paciente (integrante, sempre com preposição).</li>
+        <li>Aposto: <mark>com vírgula = explicativo</mark> (generaliza) · sem vírgula = especificativo (restringe).</li>
+      </ul>
+      <div class="pegadinhas-foco">
+        <div class="titulo">◎ Pegadinhas-foco</div>
+        <ul>
+          <li>"pela internet" = <b>meio</b>, não agente da passiva.</li>
+          <li>"Marcou-se a consulta" = apassivadora → sujeito <b>determinado</b> (não indeterminado).</li>
+          <li>Pronome indefinido (alguém/ninguém) = sujeito <b>simples</b>.</li>
+          <li>Fenômeno da natureza em sentido figurado <b>concorda</b> ("Choveram bênçãos").</li>
+          <li>"sentar-se / lembrar-se / sair-se" = <b>parte integrante do verbo</b>, não recíproco.</li>
+          <li>"é que" pode ser expletivo <b>ou</b> integrante (predicativo do sujeito) — teste retirando.</li>
+          <li>"Como" exclamativo = <b>advérbio</b>; comparativo/conformativo = <b>conjunção</b>.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. ÚLTIMA PASSADA ============ -->
+  <section id="ultima-passada">
+    <div class="badge">🚕 Última passada</div>
+    <p class="intro">Pontos curtos pra você revisar a caminho da prova. Cada um é um item-chave já estudado — ativa a memória sem precisar abrir caderno.</p>
+    <div id="checklist"></div>
+  </section>
+
+  <!-- ============ 8. FIXAÇÃO ============ -->
+  <section id="fixacao">
+    <div class="badge">◎ Fixação</div>
+    <p class="intro">Pra fixar mesmo: responda no padrão Cebraspe (CERTO/ERRADO). Cada item já vem com explicação do "porquê" pós-resposta.</p>
+    <span class="timer" id="timer">⏱ 00:00</span>
+    <div id="quiz"></div>
+    <div class="placar" id="placar"></div>
+    <button class="refazer" onclick="resetQuiz()">↺ Refazer quiz</button>
+  </section>
+
+  <!-- ============ 9. EXPLICA PRA CRIANÇA ============ -->
+  <section id="explica-crianca">
+    <div class="badge">🗣️ Explica pra criança</div>
+    <p class="intro">Se você consegue explicar pra uma criança de 12 anos, você realmente aprendeu. Leia em voz alta, no seu ritmo.</p>
+    <div class="feynman">
+      <ul>
+        <li><b>O que é sujeito:</b> é o "dono da frase", quem faz ou sofre a coisa. Se eu digo "os alunos passaram", o dono é "os alunos". Às vezes o dono some da frase, mas dá pra saber quem é pelo verbo ("Passei" → o dono é "eu"). Isso é <b>sujeito oculto</b>.</li>
+        <li><b>Quando ninguém aparece:</b> às vezes a frase não tem dono nenhum, nem escondido — como "Choveu ontem". Ninguém "choveu"; a chuva só aconteceu. Aí a gente diz que é <b>oração sem sujeito</b> (verbo impessoal).</li>
+        <li><b>O tal do "se":</b> é a palavrinha que mais confunde. O truque é olhar o verbo. Se o verbo aceita um objeto direto — tipo "alugar casa" — então "Alugam-se casas" quer dizer "casas são alugadas": o "se" é <b>apassivador</b>. Se o verbo não aceita — tipo "precisar de" — então o "se" só serve pra dizer "alguém aí", sem revelar quem: é <b>índice de indeterminação</b>.</li>
+        <li><b>A vírgula muda o nome:</b> "O deputado Nikolas falou" (sem vírgula) quer dizer que existem VÁRIOS deputados e a gente escolheu um. Já "O ministro da Fazenda, Haddad, falou" (com vírgula) quer dizer que só existe UM. A vírgula é como uma placa: com placa, é só ele; sem placa, tem mais gente igual — isso é <b>aposto especificativo × explicativo</b>.</li>
+        <li><b>Agente x alvo depois de um nome:</b> "o amor DA mãe" = a mãe é quem ama (ela FAZ) → <b>adjunto adnominal</b>. "o amor À mãe" = a mãe é quem recebe o amor (ela SOFRE) → <b>complemento nominal</b>. Mesma palavra "mãe", papel diferente por causa da preposição.</li>
+      </ul>
+      <div class="resumo">Se for pra lembrar de uma coisa só, lembra que em sintaxe o nome do termo depende da FUNÇÃO (verbo, preposição, vírgula) — nunca da aparência da palavra.</div>
+    </div>
+  </section>
+
+  <!-- ============ 10. CONCLUIR ============ -->
+  <section class="concluir">
+    <p>Marque pra contar como tópico concluído no edital e desbloquear o próximo.</p>
+    <button class="btn-concluir" onclick="this.classList.toggle('feito');this.textContent=this.classList.contains('feito')?'✓ Concluída!':'✓ Marcar como concluída'">✓ Marcar como concluída</button>
+    <div class="assinatura">◆ Bulle Inteligente ◆</div>
+  </section>
+
+</div>
+
+<script>
+/* ===================== DADOS ===================== */
+
+const NAV = [
+  {id:"como-estudar",       label:"Como estudar"},
+  {id:"secao-1",            label:"Frase/oração/período"},
+  {id:"secao-2",            label:"Sujeito"},
+  {id:"secao-3",            label:"Predicado"},
+  {id:"secao-4",            label:"Termos integrantes"},
+  {id:"secao-5",            label:"Termos acessórios"},
+  {id:"secao-6",            label:'Palavra "se"'},
+  {id:"secao-7",            label:'Vocábulo "que"'},
+  {id:"secao-8",            label:'Vocábulo "como"'},
+  {id:"quadro-comparativo", label:"Quadro comparativo"},
+  {id:"revisao-rapida",     label:"Revisão rápida"},
+  {id:"ultima-passada",     label:"Última passada"},
+  {id:"fixacao",            label:"Fixação"},
+  {id:"explica-crianca",    label:"Explica pra criança"},
+];
+
+const CHECKLIST = [
+  "<b>Frase</b> = sentido; <b>oração</b> = verbo; <b>período</b> = conjunto de orações.",
+  "Nem toda frase é oração; nem toda oração é frase.",
+  "Período simples = oração absoluta; composto = mais de uma oração.",
+  "Termos <b>essenciais</b>: sujeito e predicado.",
+  "Termos <b>integrantes</b>: OD, OI, agente da passiva e complemento nominal.",
+  "Termos <b>acessórios</b>: adjunto adnominal, adjunto adverbial e aposto.",
+  "Sujeito com <b>pronome indefinido</b> (alguém/ninguém) = sujeito simples.",
+  "Indeterminado: 3ª pes. plural sem agente · VI/VTI + se · infinitivo impessoal.",
+  "<b>Haver</b> = existir → impessoal; contamina o auxiliar ('deve haver').",
+  "Haver, fazer, passar, ser, estar, ir de <b>tempo</b> = impessoais.",
+  "<b>Ser</b> de data/hora/distância concorda com o número ('São três horas').",
+  "Fenômeno da natureza em sentido figurado <b>concorda</b> ('Choveram bênçãos').",
+  "Predicado: nominal (nome+VL) · verbal (verbo) · verbo-nominal (2 núcleos).",
+  "Verbos de ligação: ser, estar, parecer, ficar, permanecer, continuar, andar, tornar-se.",
+  "<b>Predicativo do objeto</b> caracteriza o objeto (ex.: 'Chamavam-lhe o Canjica').",
+  "OD = sem preposição; vira sujeito na voz passiva.",
+  "OD preposicionado obrigatório: pronome oblíquo tônico e relativo <b>quem</b>.",
+  "<b>lhe/lhes</b> = objeto indireto (a ele, a ela...).",
+  "Só <b>VTD e VTDI</b> admitem voz passiva / agente da passiva.",
+  "<b>CN</b> completa nome, sempre com preposição, é o <b>alvo/paciente</b>.",
+  "<b>AA</b> (locução adjetiva) = agente/posse; termo acessório.",
+  "Adjunto adverbial de <b>assunto</b>: 'falava de assuntos variados'.",
+  "Aposto <b>com vírgula</b> = explicativo (generaliza); sem vírgula = especificativo.",
+  '"se": reflexivo, apassivador, ind. de indeterminação, PIV, expletivo, conjunção.',
+  "VTD/VTDI + se = <b>apassivadora</b>; VI/VTI + se = <b>indeterminação</b>.",
+  "'assistir' = ver → VTI; = prestar assistência → VTD.",
+  "Verbos pronominais (sentar-se, lembrar-se, sair-se): 'se' é <b>parte integrante</b>.",
+  '"que" pode ser substantivo, pronome, advérbio, preposição, conjunção, expletivo, interjeição.',
+  '"é que" pode ser expletivo OU integrante (predicativo do sujeito) — teste retirando.',
+  '"como" exclamativo = advérbio; comparativo/conformativo = conjunção.',
+];
+
+const QUIZ = [
+  {enun:"A frase 'Socorro!' é uma oração, pois estabelece comunicação.", answer:false, exp:"ERRADO. Frase se define pelo sentido; oração exige <b>verbo</b>. 'Socorro!' é frase nominal, sem verbo, logo não é oração."},
+  {enun:"O período constituído por uma só oração é chamado de oração absoluta.", answer:true, exp:"CERTO. Período simples = uma única oração = oração absoluta."},
+  {enun:"Em 'Alguém passará em primeiro lugar', o sujeito é indeterminado.", answer:false, exp:"ERRADO. Pronome indefinido como núcleo é <b>sujeito simples</b> (alguém), está expresso — não é indeterminado nem oculto."},
+  {enun:"Uma das formas de indeterminar o sujeito é flexionar o verbo na 3ª pessoa do plural sem referência ao agente.", answer:true, exp:"CERTO. 'Aplaudiram os candidatos' — 3ª pes. plural sem agente explícito indetermina o sujeito."},
+  {enun:"Em 'Precisa-se de servidores honestos', o 'se' é partícula apassivadora.", answer:false, exp:"ERRADO. 'Precisar de' é VTI; com VI/VTI o 'se' é <b>índice de indeterminação do sujeito</b>, não apassivadora."},
+  {enun:"Em 'Há alunos preparados para o certame', a oração é sem sujeito, pois 'haver' está no sentido de existir.", answer:true, exp:"CERTO. 'Haver' = existir é impessoal (3ª sing.), formando oração sem sujeito."},
+  {enun:"Em 'Choveram bênçãos sobre os aprovados', temos verbo impessoal e oração sem sujeito.", answer:false, exp:"ERRADO. Fenômeno da natureza em <b>sentido figurado</b> deixa de ser impessoal e concorda com o sujeito ('bênçãos') — por isso 'choveram'."},
+  {enun:"Em 'Disfunções graves deve haver na política', o auxiliar permanece no singular porque 'haver' (existir) transmite sua impessoalidade.", answer:true, exp:"CERTO. O verbo haver impessoal contamina o auxiliar da locução, que fica no singular ('deve haver')."},
+  {enun:"No predicado nominal, o núcleo é o verbo significativo, seguido de complemento.", answer:false, exp:"ERRADO. No predicado <b>nominal</b> o núcleo é o NOME (predicativo do sujeito), ligado por verbo de ligação. Núcleo verbal caracteriza o predicado verbal."},
+  {enun:"'O aluno voltou exausto' apresenta predicado verbo-nominal, com verbo intransitivo e predicativo do sujeito.", answer:true, exp:"CERTO. 'Voltou' (VI) + 'exausto' (predicativo do sujeito) = dois núcleos = predicado verbo-nominal."},
+  {enun:"Em 'Chamavam-lhe o Canjica', 'o Canjica' funciona como predicativo do sujeito.", answer:false, exp:"ERRADO. O sujeito é indeterminado e 'o Canjica' caracteriza o objeto ('lhe'). Trata-se de <b>predicativo do objeto</b>."},
+  {enun:"O objeto direto, na voz passiva analítica, passa a exercer a função de sujeito.", answer:true, exp:"CERTO. 'O aluno leu o livro' → 'O livro foi lido pelo aluno': o OD vira sujeito paciente."},
+  {enun:"Em 'os outros 85% não têm a quem reclamar', 'a quem' é objeto direto preposicionado do verbo 'ter'.", answer:false, exp:"ERRADO. A preposição 'a' liga-se a <b>reclamar</b> (reclamar a alguém); 'quem' é objeto indireto, não OD preposicionado."},
+  {enun:"O pronome oblíquo 'lhe' pode exercer a função sintática de objeto indireto.", answer:true, exp:"CERTO. 'Lhe/lhes' equivale a 'a ele, a ela, a eles, a elas', função de OI."},
+  {enun:"O agente da passiva pode ocorrer com verbos intransitivos e de ligação.", answer:false, exp:"ERRADO. Apenas VTD e VTDI admitem voz passiva; o agente da passiva <b>não ocorre</b> com VI, VTI nem verbos de ligação."},
+  {enun:"Em 'Tenho necessidade de descanso', 'de descanso' é complemento nominal do substantivo 'necessidade'.", answer:true, exp:"CERTO. 'Ter' é VTD (OD = necessidade). 'De descanso' completa o NOME abstrato 'necessidade' → complemento nominal."},
+  {enun:"Em 'Necessito de descanso', 'de descanso' é complemento nominal.", answer:false, exp:"ERRADO. 'Necessitar' é VTI; 'de descanso' completa o VERBO → é <b>objeto indireto</b>, não complemento nominal."},
+  {enun:"Em 'as virtudes dos pais', a expressão 'dos pais' é adjunto adnominal com valor de posse.", answer:true, exp:"CERTO. Indica posse (virtudes que pertencem aos pais) e é o agente/possuidor → adjunto adnominal (acessório)."},
+  {enun:"Em 'a educação dos filhos', 'dos filhos' é adjunto adnominal, pois indica quem pratica a educação.", answer:false, exp:"ERRADO. Os filhos <b>recebem</b> a educação (alvo/paciente). Completa o nome abstrato 'educação' → <b>complemento nominal</b>."},
+  {enun:"Em 'O professor falava de assuntos variados', a expressão destacada tem valor adverbial (adjunto adverbial de assunto).", answer:true, exp:"CERTO. Com verbos como falar/comentar, 'de assuntos variados' é adjunto adverbial de assunto; não cabe troca por 'lhe'."},
+  {enun:"'O ex-presidente do Brasil, Lula da Silva, apresentará os argumentos' está corretamente pontuado.", answer:false, exp:"ERRADO. Com vírgulas, o aposto seria explicativo e generalizaria (só um ex-presidente). Como há outros, deve ser <b>especificativo, sem vírgula</b>."},
+  {enun:"O aposto explicativo vem entre vírgulas e tende a generalizar a informação.", answer:true, exp:"CERTO. Ex.: 'O ministro da Fazenda, Haddad, ...' — pressupõe um só ministro (generalização)."},
+  {enun:"Em 'Alugam-se casas', o 'se' é índice de indeterminação do sujeito.", answer:false, exp:"ERRADO. 'Alugar' é VTD e 'casas' é sujeito paciente ('casas são alugadas'). O 'se' é <b>partícula apassivadora</b> (voz passiva sintética)."},
+  {enun:"Em 'O deputado denunciou-se durante a delação', o 'se' é pronome reflexivo, com função de objeto direto.", answer:true, exp:"CERTO. A ação recai sobre o próprio sujeito (relação biunívoca); 'se' = objeto direto reflexivo."},
+  {enun:"Em 'Quando falar com a imprensa, lembre-se de que ela tem a última palavra', o 'se' é pronome recíproco.", answer:false, exp:"ERRADO. Não há reciprocidade; 'lembrar-se' é verbo pronominal → o 'se' é <b>parte integrante do verbo</b>."},
+  {enun:"Em 'A imprensa é um exército com o qual se pode conquistar o mundo', o 'se' é partícula apassivadora.", answer:true, exp:"CERTO. 'pode-se conquistar o mundo' = 'o mundo pode ser conquistado' — voz passiva sintética, 'se' apassivador."},
+  {enun:"Em 'Como as pessoas estão intolerantes hoje!', o 'como' é conjunção subordinativa comparativa.", answer:false, exp:"ERRADO. Em construção exclamativa, 'como' é <b>advérbio de intensidade</b> (equivale a 'quão'), não conjunção."},
+  {enun:"Em 'Tudo aconteceu como combinamos', o 'como' é conjunção subordinativa conformativa.", answer:true, exp:"CERTO. Exprime conformidade (= conforme, de acordo com) → conjunção conformativa."},
+  {enun:"Na frase 'A verdade é que ninguém escapa da morte', a expressão 'é que' é meramente expletiva e pode ser retirada.", answer:false, exp:"ERRADO. Aqui 'é que' <b>integra</b> a estrutura: introduz oração que funciona como predicativo do sujeito. Retirá-la quebra a frase."},
+  {enun:"Na frase 'Não passa o tempo: nós é que mudamos!', a expressão 'é que' tem valor enfático (expletivo).", answer:true, exp:"CERTO. Pode ser retirada sem prejuízo ('nós mudamos'): apenas realça o sujeito 'nós'."},
+];
+
+/* ===================== MOTOR ===================== */
+document.getElementById('navLinks').innerHTML =
+  NAV.map(n=>`<a href="#${n.id}">${n.label}</a>`).join('');
+
+document.getElementById('checklist').innerHTML =
+  CHECKLIST.map((t,i)=>`<div class="card-check"><span class="num">${String(i+1).padStart(2,'0')}</span><span class="txt">${t}</span></div>`).join('');
+
+let respostas = {};
+function renderQuiz(){
+  respostas = {};
+  document.getElementById('quiz').innerHTML = QUIZ.map((q,i)=>`
+    <div class="card-q" id="q${i}">
+      <div class="rot">Questão ${String(i+1).padStart(2,'0')}</div>
+      <div class="enun">${q.enun}</div>
+      <div class="btns">
+        <button onclick="responder(${i},true)">✓ CERTO</button>
+        <button onclick="responder(${i},false)">✗ ERRADO</button>
+      </div>
+      <div class="exp" id="exp${i}">
+        <div class="verdict"></div>
+        <div class="gab">${q.exp}</div>
+      </div>
+    </div>`).join('');
+  document.getElementById('placar').textContent='';
+}
+function responder(i,escolha){
+  if(respostas[i]!==undefined) return;
+  respostas[i]=escolha;
+  const q=QUIZ[i], card=document.getElementById('q'+i);
+  const btns=card.querySelectorAll('button');
+  const acertou = escolha===q.answer;
+  btns.forEach(b=>b.disabled=true);
+  btns[escolha?0:1].classList.add(escolha?'sel-certo':'sel-errado');
+  card.classList.add(acertou?'acertou':'errou');
+  const exp=document.getElementById('exp'+i);
+  exp.querySelector('.verdict').textContent = acertou ? '✓ Você acertou' : '✗ Você errou — gabarito: '+(q.answer?'CERTO':'ERRADO');
+  exp.querySelector('.verdict').style.color = acertou ? 'var(--verde)' : 'var(--vermelho)';
+  exp.classList.add('show');
+  atualizaPlacar();
+}
+function atualizaPlacar(){
+  const total=QUIZ.length, feitas=Object.keys(respostas).length;
+  const acertos=Object.keys(respostas).filter(i=>respostas[i]===QUIZ[i].answer).length;
+  document.getElementById('placar').textContent = feitas===total ? `Você acertou ${acertos} de ${total}.` : `${feitas}/${total} respondidas · ${acertos} certas`;
+}
+function resetQuiz(){ renderQuiz(); }
+renderQuiz();
+
+let seg=0;
+setInterval(()=>{seg++;const m=String(Math.floor(seg/60)).padStart(2,'0'),s=String(seg%60).padStart(2,'0');
+  document.getElementById('timer').textContent=`⏱ ${m}:${s}`;},1000);
+</script>
+</body>
+</html>

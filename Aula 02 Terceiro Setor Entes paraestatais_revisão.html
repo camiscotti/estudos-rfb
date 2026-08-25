@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  TEMPLATE BULLE INTELIGENTE — NÃO ALTERAR CSS, ESTRUTURA NEM CORES.
+  ============================================================================
+-->
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terceiro Setor e Entidades Paraestatais · Bulle Inteligente</title>
+<style>
+  :root{
+    --laranja:#E06F23;
+    --laranja-escuro:#C25E18;
+    --laranja-detalhe:#B85417;
+    --pessego:#FBE3CF;
+    --navy:#0B2432;
+    --navy-grad:#123243;
+    --grafite:#2A2320;
+    --creme-banca:#FCF6E3;
+    --creme-revisao:#FCEBDD;
+    --branco:#ffffff;
+    --cinza-linha:#ece4dc;
+    --zebra:#faf5ef;
+    --verde:#2e7d4f;
+    --verde-bg:#e5f4ea;
+    --vermelho:#c0392b;
+    --vermelho-bg:#fbe9e7;
+    --serif:Georgia,'Times New Roman',serif;
+    --sans:'Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:var(--serif);
+    color:var(--grafite);
+    background:#fdfbf8;
+    line-height:1.7;
+    font-size:17px;
+  }
+  a{color:inherit;}
+
+  /* ---------- 1. NAV (azul-marinho) ---------- */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    background:linear-gradient(90deg,var(--navy),var(--navy-grad));
+    color:#eaf1f5;
+    display:flex;align-items:center;gap:6px;
+    padding:10px 18px;
+    flex-wrap:wrap;
+    box-shadow:0 2px 14px rgba(0,0,0,.18);
+  }
+  .nav .brand{
+    font-family:var(--sans);font-weight:700;letter-spacing:.5px;
+    color:#fff;margin-right:14px;font-size:15px;white-space:nowrap;
+  }
+  .nav .brand b{color:var(--laranja);}
+  .nav-links{display:flex;gap:4px;flex-wrap:wrap;flex:1;}
+  .nav-links a{
+    font-family:var(--sans);font-size:12.5px;text-decoration:none;
+    color:#cfe0ea;padding:6px 11px;border-radius:20px;
+    transition:.15s;white-space:nowrap;
+  }
+  .nav-links a:hover{background:rgba(224,111,35,.22);color:#fff;}
+  .nav .immersion{
+    font-family:var(--sans);font-size:12.5px;cursor:pointer;
+    background:var(--laranja);color:#fff;border:none;
+    padding:7px 14px;border-radius:20px;font-weight:600;white-space:nowrap;
+    transition:.15s;
+  }
+  .nav .immersion:hover{background:var(--laranja-escuro);}
+
+  /* ---------- layout ---------- */
+  .wrap{max-width:860px;margin:0 auto;padding:0 22px 90px;}
+
+  /* ---------- 2. Cabeçalho ---------- */
+  .header{text-align:center;padding:46px 10px 30px;}
+  .header .logo{
+    font-family:var(--serif);font-size:30px;font-weight:700;
+    color:var(--laranja);letter-spacing:.5px;
+  }
+  .header .sub{
+    font-family:var(--sans);font-size:11px;letter-spacing:3px;
+    color:#8a7d72;margin-top:6px;text-transform:uppercase;
+  }
+  .tag{
+    display:inline-block;font-family:var(--sans);font-size:11px;
+    letter-spacing:2.5px;color:var(--laranja);text-transform:uppercase;
+    margin:26px 0 10px;font-weight:700;
+  }
+  .header h1{
+    font-family:var(--serif);font-size:30px;line-height:1.25;
+    margin:6px auto 0;max-width:720px;color:var(--grafite);
+  }
+
+  /* ---------- badges de bloco ---------- */
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:1px;
+    background:var(--laranja);color:#fff;text-transform:uppercase;
+    padding:8px 16px;border-radius:8px;margin:0 0 4px;
+  }
+
+  /* ---------- 3. Como estudar ---------- */
+  .quote-box{
+    border-left:4px solid var(--laranja);
+    background:#fff;border-radius:0 10px 10px 0;
+    padding:20px 24px;margin:16px 0 8px;font-style:italic;
+    box-shadow:0 2px 10px rgba(0,0,0,.04);color:#4a4038;
+  }
+  .quote-box::before{content:"\201C";color:var(--pessego);
+    font-size:52px;font-family:Georgia;line-height:0;vertical-align:-18px;margin-right:6px;}
+
+  /* ---------- 4. Seções de conteúdo ---------- */
+  .secao{
+    border-left:4px solid var(--laranja);
+    padding:4px 0 4px 22px;margin:40px 0;
+  }
+  .secao > h2{
+    font-family:var(--serif);color:var(--laranja);font-size:24px;
+    margin:0 0 4px;padding-bottom:10px;
+    border-bottom:2px solid var(--cinza-linha);
+  }
+  .secao > h2 .lei{font-family:var(--sans);font-size:13px;color:#9a8b7d;font-weight:400;}
+  .secao p{margin:14px 0;}
+  .dropcap::first-letter{
+    font-family:var(--serif);float:left;color:var(--laranja);
+    font-size:62px;line-height:.8;padding:6px 10px 0 0;font-weight:700;
+  }
+  .secao h3{font-family:var(--serif);color:var(--laranja-detalhe);font-size:18px;margin:22px 0 6px;}
+  .secao ul{margin:12px 0;padding-left:22px;}
+  .secao li{margin:8px 0;}
+  .secao li b, .secao p b{color:var(--grafite);}
+  mark{background:var(--pessego);color:var(--grafite);padding:1px 5px;border-radius:4px;}
+
+  /* macete / mnemônico */
+  .macete{
+    background:#fff;border:1.5px dashed var(--laranja);
+    border-radius:10px;padding:12px 16px;margin:16px 0;
+    font-family:var(--serif);
+  }
+  .macete .pill{
+    display:inline-block;font-family:'Courier New',monospace;font-weight:700;
+    background:var(--laranja-escuro);color:#fff;padding:3px 10px;border-radius:6px;
+    margin-right:8px;font-size:14px;
+  }
+  .macete b{color:var(--laranja-detalhe);}
+
+  /* nota de jurisprudência */
+  .nota-juris{
+    font-style:italic;color:#5a4f45;background:#fbf7f2;
+    border-left:3px solid var(--pessego);padding:10px 16px;margin:14px 0;border-radius:0 8px 8px 0;
+  }
+
+  /* Caixa "Como a banca derruba" — assinatura */
+  .banca{
+    background:var(--creme-banca);border:1px solid #eadfba;
+    border-radius:10px;padding:14px 18px;margin:18px 0;
+  }
+  .banca .titulo{
+    font-family:var(--sans);font-weight:700;color:var(--laranja-detalhe);
+    font-size:13px;letter-spacing:.5px;margin-bottom:6px;
+  }
+  .banca .correcao{margin-top:8px;padding-top:8px;border-top:1px dashed #e0d4a8;}
+  .banca .correcao b{color:var(--verde);}
+
+  /* ---------- tabelas ---------- */
+  table.comp{width:100%;border-collapse:collapse;margin:16px 0;font-size:15.5px;
+    box-shadow:0 2px 12px rgba(0,0,0,.05);border-radius:10px;overflow:hidden;font-family:var(--sans);}
+  table.comp caption{
+    caption-side:top;text-align:left;font-family:var(--serif);font-weight:700;
+    color:var(--laranja-detalhe);font-size:16px;margin-bottom:8px;
+  }
+  table.comp th{background:var(--laranja);color:#fff;padding:11px 14px;text-align:left;font-weight:600;}
+  table.comp td{padding:11px 14px;border-top:1px solid var(--cinza-linha);vertical-align:top;}
+  table.comp tbody tr:nth-child(even){background:var(--zebra);}
+  table.comp td:first-child{font-weight:700;color:var(--grafite);}
+  table.comp .dif{background:var(--pessego);font-weight:700;}
+
+  /* ---------- 6. Revisão rápida ---------- */
+  .revisao{background:#fff;border-radius:12px;padding:22px 24px;margin:16px 0;
+    box-shadow:0 2px 12px rgba(0,0,0,.05);}
+  .revisao h3{font-family:var(--serif);color:var(--laranja);font-size:18px;margin:20px 0 6px;}
+  .revisao h3:first-child{margin-top:0;}
+  .revisao ul{padding-left:20px;margin:8px 0;}
+  .revisao li{margin:7px 0;}
+  .pegadinhas-foco{
+    background:var(--creme-revisao);border-radius:10px;padding:16px 20px;margin-top:20px;
+    border:1px solid #f2d9c4;
+  }
+  .pegadinhas-foco .titulo{font-family:var(--sans);font-weight:700;color:var(--laranja-detalhe);
+    letter-spacing:.5px;margin-bottom:8px;font-size:13px;}
+
+  /* ---------- 7. Checklist do Uber ---------- */
+  .intro{color:#6a5f54;font-style:italic;margin:10px 0 18px;}
+  #checklist{display:grid;gap:10px;}
+  .card-check{
+    display:flex;gap:14px;align-items:center;background:#fff;border-radius:10px;
+    padding:12px 16px;box-shadow:0 1px 8px rgba(0,0,0,.05);border-left:3px solid var(--laranja);
+  }
+  .card-check .num{
+    font-family:'Courier New',monospace;font-weight:700;color:#fff;background:var(--laranja);
+    min-width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;
+  }
+  .card-check .txt{font-size:15.5px;}
+
+  /* ---------- 8. Fixação / quiz ---------- */
+  .timer{display:inline-block;font-family:'Courier New',monospace;background:var(--navy);color:#fff;
+    padding:6px 14px;border-radius:8px;margin:4px 0 14px;font-size:15px;}
+  .card-q{background:#fff;border-radius:12px;padding:18px 20px;margin:14px 0;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);border:1px solid #f0e8e0;}
+  .card-q.acertou{border-color:var(--verde);}
+  .card-q.errou{border-color:var(--vermelho);}
+  .card-q .rot{font-family:var(--sans);font-size:12px;letter-spacing:1px;color:var(--laranja);
+    font-weight:700;text-transform:uppercase;}
+  .card-q .enun{margin:8px 0 14px;}
+  .card-q .btns{display:flex;gap:10px;}
+  .card-q .btns button{
+    font-family:var(--sans);font-weight:700;cursor:pointer;border:2px solid var(--cinza-linha);
+    background:#fff;padding:9px 20px;border-radius:8px;font-size:14px;transition:.12s;color:var(--grafite);
+  }
+  .card-q .btns button:hover{border-color:var(--laranja);}
+  .card-q .btns button.sel-certo{background:var(--verde-bg);border-color:var(--verde);color:var(--verde);}
+  .card-q .btns button.sel-errado{background:var(--vermelho-bg);border-color:var(--vermelho);color:var(--vermelho);}
+  .card-q .btns button:disabled{cursor:default;opacity:.85;}
+  .card-q .exp{display:none;margin-top:14px;padding:12px 16px;border-radius:8px;font-size:15px;
+    background:#faf6f1;border-left:3px solid var(--laranja);}
+  .card-q .exp.show{display:block;}
+  .card-q .exp .verdict{font-family:var(--sans);font-weight:700;font-size:13px;margin-bottom:4px;}
+  .card-q .exp .gab{color:#5a4f45;}
+  .refazer{font-family:var(--sans);font-weight:700;cursor:pointer;background:var(--laranja);color:#fff;
+    border:none;padding:11px 22px;border-radius:8px;margin-top:16px;font-size:14px;}
+  .refazer:hover{background:var(--laranja-escuro);}
+  .placar{font-family:var(--sans);font-weight:700;color:var(--laranja-detalhe);margin-top:14px;}
+
+  /* ---------- 9. Explica pra criança ---------- */
+  .feynman{background:#fffaf4;border:2px solid var(--pessego);border-radius:14px;padding:24px 26px;margin:16px 0;}
+  .feynman ul{list-style:none;padding:0;margin:0;}
+  .feynman li{margin:16px 0;padding-left:26px;position:relative;font-size:17px;line-height:1.8;}
+  .feynman li::before{content:"\1F5E3";position:absolute;left:0;top:2px;font-size:15px;}
+  .feynman li b{color:var(--laranja-detalhe);}
+  .feynman .resumo{margin-top:20px;padding:14px 18px;background:var(--pessego);border-radius:10px;
+    font-weight:700;font-style:italic;color:var(--grafite);}
+
+  /* ---------- 10. Concluir ---------- */
+  .concluir{text-align:center;padding:40px 10px 10px;}
+  .concluir p{color:#6a5f54;font-style:italic;}
+  .btn-concluir{font-family:var(--sans);font-weight:700;cursor:pointer;background:var(--laranja);color:#fff;
+    border:none;padding:14px 30px;border-radius:10px;font-size:15px;margin:10px 0;transition:.15s;}
+  .btn-concluir:hover{background:var(--laranja-escuro);}
+  .btn-concluir.feito{background:var(--verde);}
+  .assinatura{font-family:var(--serif);color:var(--laranja);letter-spacing:2px;margin-top:24px;font-size:15px;}
+
+  /* ---------- Modo imersão ---------- */
+  body.imersao .nav-links{display:none;}
+  body.imersao .wrap{max-width:940px;}
+
+  @media(max-width:640px){
+    body{font-size:16px;}
+    .header h1{font-size:24px;}
+    .secao > h2{font-size:21px;}
+    table.comp{font-size:14px;}
+    .nav .brand{width:100%;margin-bottom:6px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 1. NAV ============ -->
+<nav class="nav">
+  <span class="brand">Bulle <b>Inteligente</b></span>
+  <div class="nav-links" id="navLinks"></div>
+  <button class="immersion" onclick="document.body.classList.toggle('imersao')">⛶ Modo imersão</button>
+</nav>
+
+<div class="wrap">
+
+  <!-- ============ 2. CABEÇALHO ============ -->
+  <header class="header">
+    <div class="logo">Bulle Inteligente</div>
+    <div class="sub">Material de estudo · Mentoria</div>
+    <div class="tag">— Tarefa de estudo</div>
+    <h1>02 · Receita Federal (Analista Tributário) · Direito Administrativo · 02 · Terceiro Setor e Entidades Paraestatais</h1>
+  </header>
+
+  <!-- ============ 3. COMO ESTUDAR ============ -->
+  <section id="como-estudar">
+    <div class="badge">📖 Como estudar 02</div>
+    <div class="quote-box">Pronto(a) pra esse tema? Nós da Bulle Inteligente pegamos o essencial e organizamos do jeito que cola na sua cabeça. Aviso de ouro pra FGV: aqui, <b>quase toda questão vive de trocar um instrumento pelo outro</b> — contrato de gestão, termo de parceria, termo de colaboração e termo de fomento. Se você travar a “tabela dos instrumentos”, já garante a maioria dos pontos.</div>
+  </section>
+
+  <!-- ============ 4. SEÇÕES DE CONTEÚDO ============ -->
+  <!-- INICIO CONTEUDO -->
+
+  <section class="secao" id="secao-1">
+    <h2>Terceiro Setor — o mapa dos três setores</h2>
+    <p class="dropcap">Antes de decorar sigla, entenda o cenário. O Estado dividiu a vida em três “andares”. O <b>terceiro setor</b> são entidades <mark>privadas da sociedade civil</mark>, surgidas necessariamente no meio privado, <mark>sem fins lucrativos nem econômicos</mark>, que atuam em <b>colaboração ou apoio</b> ao Estado na prestação de atividades de utilidade pública.</p>
+    <ul>
+      <li><b>1º setor — Estado:</b> a própria Administração Pública.</li>
+      <li><b>2º setor — Mercado:</b> os particulares que exploram atividade econômica (têm fins lucrativos).</li>
+      <li><b>3º setor — Sociedade civil sem fins lucrativos:</b> nem é Estado, nem busca lucro. Está no meio.</li>
+    </ul>
+    <p>Duas marcas do terceiro setor: <b>não integra a Administração Pública</b> (por isso não é 1º setor) e <b>não tem fins lucrativos nem explora atividade econômica</b> (por isso não é 2º setor / mercado). Elas nascem da <mark>publicização</mark> — a transferência, do Estado para a sociedade civil, de atividades de relevância social. A lei e a doutrina as chamam de “organizações da sociedade civil”; no dia a dia, ONGs.</p>
+    <div class="macete">
+      <span class="pill">1E-2M-3S</span> <b>1º Estado, 2º Mercado, 3º Sociedade civil.</b> Publicização = Estado passa a “bola” de uma atividade social para a sociedade (privado faz o serviço).
+    </div>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que as entidades do terceiro setor <b>integram a Administração Pública indireta</b> ou que <b>exploram atividade econômica com fins lucrativos</b>.
+      <div class="correcao"><b>Correto:</b> o terceiro setor NÃO integra a Administração (nem direta nem indireta) e NÃO tem fins lucrativos. Se tivesse lucro/atividade econômica, seria 2º setor (mercado).</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-2">
+    <h2>Entidades Paraestatais — “ao lado” do Estado</h2>
+    <p class="dropcap">Paraestatal quer dizer “ao lado do Estado”. São entes <b>privados, sem fins lucrativos</b>, que atuam em <b>colaboração com o Estado</b>, <mark>não integram o conceito formal de Administração Pública</mark> (logo, estão no terceiro setor) e, além disso, <b>possuem algum vínculo com o poder público</b>.</p>
+    <p>Chave de leitura: o terceiro setor <b>não é obrigado</b> a ter vínculo com o Poder Público. Mas <mark>se houver esse vínculo, a entidade passa a ser considerada paraestatal</mark>. Exercem <b>função típica, porém não exclusiva</b> do Estado (assistência social, formação profissional etc.).</p>
+    <h3>As espécies (o índice do assunto)</h3>
+    <ul>
+      <li><b>Serviços sociais autônomos</b> (Sistema S).</li>
+      <li><b>Organizações Sociais (OS)</b> — Lei 9.637/98.</li>
+      <li><b>Organizações da Sociedade Civil de Interesse Público (OSCIP)</b> — Lei 9.790/99.</li>
+      <li><b>Entidades de apoio.</b></li>
+      <li><b>Organizações da Sociedade Civil (OSC)</b> — Lei 13.019/2014.</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">SO-OS-CIP</span> <b>S</b>istema S · <b>O</b>rganização <b>S</b>ocial · Os<b>CIP</b> · Apoio · OSC. São 5 espécies de paraestatal — todas privadas, todas fora da Administração, todas com vínculo com o poder público.
+    </div>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que a entidade paraestatal <b>faz parte da Administração Indireta</b> por ter vínculo com o Estado.
+      <div class="correcao"><b>Correto:</b> vínculo com o Poder Público NÃO transforma a entidade em Administração. Ela continua privada e fora da Administração — só ganha o rótulo de “paraestatal”.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-3">
+    <h2>Serviços Sociais Autônomos — o “Sistema S”</h2>
+    <p class="dropcap">São <b>pessoas jurídicas de direito privado, sem fins lucrativos</b>, criadas por meio de <mark>autorização legal</mark>, para ministrar <b>assistência ou ensino a certas categorias sociais ou grupos profissionais</b>. Atenção fina: a lei <b>autoriza</b>, mas a criação só se efetiva de fato com o <mark>registro do ato constitutivo no registro civil das pessoas jurídicas</mark>.</p>
+    <ul>
+      <li><b>Exemplos (Sistema S):</b> Senai, Sesc, Sesi, Senac e Sebrae.</li>
+      <li><b>Custeio:</b> <mark>contribuições parafiscais</mark> — de natureza tributária, no interesse de categorias profissionais ou econômicas. Podem, ainda, receber <b>recursos orçamentários</b>.</li>
+      <li><b>Prestação de contas:</b> como o dinheiro tem natureza pública, prestam contas e se submetem à fiscalização do <mark>TCU</mark>.</li>
+      <li><b>Vínculo:</b> em regra, aos órgãos da administração direta (ministério do setor correspondente).</li>
+      <li><b>Foro:</b> <mark>justiça estadual</mark> (são entidades privadas, não integram a Administração).</li>
+    </ul>
+    <h3>Pessoal, seleção e licitação</h3>
+    <ul>
+      <li><b>Contratação:</b> não exige concurso público, mas <mark>processo seletivo</mark> simplificado, respeitando os princípios constitucionais (entendimento do TCU).</li>
+      <li><b>Regime:</b> CLT. Porém, equiparam-se a funcionários públicos <b>para fins penais</b> (CP, art. 327) e de <b>improbidade</b> (Lei 8.429/92).</li>
+      <li><b>Compras:</b> não se submetem por completo à Lei de Licitações — usam <mark>regulamentos próprios</mark>, que NÃO podem inovar na ordem jurídica (não criam nova dispensa/inexigibilidade).</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">S de SISTEMA S</span> <b>S</b>em concurso (seleção) · <b>S</b>em lucro · <b>S</b>ubmete ao TCU · e<b>S</b>tadual (foro). Custeio parafiscal.
+    </div>
+    <h3>“Novos” serviços sociais autônomos</h3>
+    <p>São entidades chamadas de serviços sociais autônomos, mas que <b>não têm as características clássicas</b>. Em regra: (i) criados pelo <b>Poder Executivo</b> por autorização legal; (ii) presidente <b>nomeado pelo Presidente da República</b>; (iii) supervisão ministerial; (iv) celebram <mark>contrato de gestão</mark> com o Executivo; (v) podem receber dotações do orçamento geral da União. <b>Exemplos:</b> Apex-Brasil, ABDI e Anater.</p>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que os serviços sociais autônomos <b>exigem concurso público</b> ou que <b>não prestam contas ao TCU por serem entidades privadas</b>.
+      <div class="correcao"><b>Correto:</b> não há concurso (é processo seletivo simplificado), mas HÁ dever de prestar contas ao TCU, porque manejam recursos de natureza pública (parafiscais).</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-4">
+    <h2>Organizações Sociais (OS) <span class="lei">(Lei 9.637/98)</span></h2>
+    <p class="dropcap">OS não é um “tipo de pessoa jurídica” — é uma <mark>qualificação jurídica</mark> dada a pessoa jurídica de direito privado, sem fins lucrativos, instituída por particulares, que recebe <b>delegação do Poder Público mediante contrato de gestão</b> para desempenhar <b>serviço público de natureza social</b>. Guarde a frase de ouro: <mark>nenhuma entidade nasce OS</mark> — ela nasce associação ou fundação e, cumprindo os critérios, recebe a qualificação.</p>
+    <ul>
+      <li><b>Áreas de atuação (art. 1º):</b> ensino, pesquisa científica, desenvolvimento tecnológico, proteção e preservação do meio ambiente, cultura e saúde.</li>
+      <li><b>Natureza:</b> são <mark>entidades públicas não estatais</mark> — públicas porque prestam serviço público e administram patrimônio público; não estatais porque não integram a Administração direta nem indireta.</li>
+      <li><b>Efeito legal (art. 11):</b> declaradas de <b>interesse social e utilidade pública</b>.</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">CDPMCS</span> Áreas da OS: <b>C</b>ultura, <b>D</b>esenvolvimento tecnológico, <b>P</b>esquisa, <b>M</b>eio ambiente, ensino (<b>C</b>onhecimento) e <b>S</b>aúde. Repare: OS é área AMPLA de ensino/pesquisa/tecnologia/ambiente/cultura/saúde.
+    </div>
+    <h3>Qualificação: ato discricionário</h3>
+    <p>Depende de <mark>duas etapas, ambas discricionárias</mark> (art. 2º, II): (1) aprovação do Ministro/titular do órgão supervisor da área do objeto social + do Ministro da Administração (hoje as atribuições estão no <b>Ministério da Gestão e Inovação em Serviços Públicos</b>); (2) a qualificação pode ser formalizada em <b>ato do Presidente da República</b>.</p>
+    <h3>Contrato de gestão (CG)</h3>
+    <ul>
+      <li><b>Instrumento (art. 5º e 6º):</b> o vínculo Poder Público × OS é o <mark>contrato de gestão</mark>, elaborado de comum acordo, discriminando atribuições, responsabilidades e obrigações.</li>
+      <li><b>Princípios (art. 7º):</b> legalidade, impessoalidade, moralidade, publicidade e economicidade.</li>
+      <li><b>Preceitos:</b> programa de trabalho, metas e prazos, critérios objetivos de avaliação de desempenho (indicadores de qualidade e produtividade) e limites de remuneração dos dirigentes.</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">LIMPEco</span> Princípios do contrato de gestão: <b>L</b>egalidade, <b>I</b>mpessoalidade, <b>M</b>oralidade, <b>P</b>ublicidade e <b>Eco</b>nomicidade. (Sem eficiência, sem supremacia do interesse público!)
+    </div>
+    <p class="nota-juris">Existem DOIS contratos de gestão diferentes: (a) o do art. 37, §8º, da CF, usado para transformar autarquia/fundação em <b>agência executiva</b> (arts. 51 e 52 da Lei 9.649/98) — dentro da Administração; e (b) o da Lei 9.637/98, que firma a parceria com a <b>OS</b> — fora da Administração.</p>
+    <h3>Fomento, fiscalização e desqualificação</h3>
+    <ul>
+      <li><b>Fomento:</b> recursos orçamentários, permissão de uso de bens públicos (com <mark>dispensa de licitação</mark>) e cessão especial de servidor (com ônus para a origem).</li>
+      <li><b>Fiscalização:</b> órgão/entidade supervisora da área + comissão de avaliação (especialistas de notória capacidade). Irregularidade → ciência ao <b>TCU</b>, sob pena de <mark>responsabilidade solidária</mark> (art. 9º).</li>
+      <li><b>Contratações (art. 17):</b> publicam regulamento próprio em até <mark>90 dias</mark>; NÃO se submetem à Lei 14.133/2021.</li>
+      <li><b>Desqualificação (art. 16):</b> por descumprimento do CG, via processo administrativo com ampla defesa; dirigentes respondem <b>individual e solidariamente</b>; há <b>reversão</b> dos bens e valores entregues.</li>
+    </ul>
+    <p class="nota-juris">STF (ADI 1.923): as OS, por integrarem o terceiro setor, <b>não se submetem ao dever de licitar</b>; mas seu regime é informado pelo <b>núcleo essencial dos princípios da Administração</b> (CF, art. 37, caput), especialmente a impessoalidade — daí as regras objetivas e impessoais para gastar recurso público.</p>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que a qualificação como OS é <b>ato vinculado</b>, que o vínculo é <b>termo de parceria</b>, ou que na elaboração do CG observam-se a <b>eficiência e a supremacia do interesse público</b>.
+      <div class="correcao"><b>Correto:</b> OS = qualificação DISCRICIONÁRIA + <b>contrato de gestão</b>. Os princípios do art. 7º são o LIMPEco (legalidade, impessoalidade, moralidade, publicidade e economicidade) — sem eficiência e sem supremacia do interesse público.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-5">
+    <h2>OSCIP <span class="lei">(Lei 9.790/99)</span></h2>
+    <p class="dropcap">Também é uma <mark>qualificação</mark> de pessoa jurídica de direito privado, sem fins lucrativos, instituída por particulares, para <b>serviços sociais não exclusivos do Estado</b>, com incentivo e fiscalização do Poder Público. O par de ouro contra OS: enquanto o vínculo da OS é <b>contrato de gestão</b>, o da OSCIP é o <mark>termo de parceria</mark>.</p>
+    <ul>
+      <li><b>Requisito temporal:</b> funcionamento regular há, no mínimo, <mark>3 anos</mark> (art. 1º). A OS não tem esse prazo!</li>
+      <li><b>Qualificação:</b> requerimento ao <mark>Ministério da Justiça</mark>; a decisão é <mark>VINCULADA</mark> — cumpridos os requisitos, o Ministro DEVE conceder o certificado (arts. 5º e 6º).</li>
+      <li><b>Vedações (art. 2º):</b> não podem ser OSCIP as sociedades comerciais, sindicatos, instituições religiosas, organizações partidárias, cooperativas, fundações públicas, entre outras — e <mark>as próprias OS</mark>.</li>
+      <li><b>Perda da qualificação (art. 7º/8º):</b> a pedido ou por iniciativa popular/MP; qualquer cidadão é parte legítima (vedado o anonimato).</li>
+      <li><b>Vedação política (art. 16):</b> proibida a participação em campanhas político-partidárias ou eleitorais.</li>
+      <li><b>Contratações:</b> regulamento próprio em até <mark>30 dias</mark> (art. 14). Não se submetem à Lei de Licitações.</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">OSCIP = 3-J-V</span> <b>3</b> anos de funcionamento · Ministério da <b>J</b>ustiça · ato <b>V</b>inculado. Vínculo = termo de <b>P</b>arceria.
+    </div>
+    <p class="nota-juris">Não é possível uma entidade ser <b>OS e OSCIP ao mesmo tempo</b>. O art. 18 da Lei 9.790/99 garantia a manutenção simultânea só por 5 anos a partir da vigência da lei — prazo já esgotado.</p>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que a qualificação como OSCIP é <b>discricionária</b>, que compete ao <b>Ministério da Gestão</b>, ou que o vínculo se dá por <b>contrato de gestão</b>.
+      <div class="correcao"><b>Correto:</b> OSCIP = ato <b>VINCULADO</b>, competência do <b>Ministério da Justiça</b>, vínculo por <b>termo de parceria</b>. É o espelho invertido da OS.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-6">
+    <h2>Organizações da Sociedade Civil (OSC) <span class="lei">(Lei 13.019/2014)</span></h2>
+    <p class="dropcap">É o <mark>Marco Regulatório do Terceiro Setor</mark>. Institui um regime de <b>mútua cooperação</b>, com finalidades de interesse público e recíproco, formalizado por <b>termo de colaboração</b>, <b>termo de fomento</b> ou <b>acordo de cooperação</b>. O coração do tema (e da FGV) é saber diferenciar esses três instrumentos por <b>iniciativa</b> e <b>recursos financeiros</b>.</p>
+    <table class="comp">
+      <caption>Os 3 instrumentos da Lei 13.019/2014</caption>
+      <thead><tr><th>Instrumento</th><th>Quem propõe?</th><th>Transfere recurso $?</th></tr></thead>
+      <tbody>
+        <tr><td>Termo de colaboração (TC)</td><td class="dif">Administração pública</td><td>Sim</td></tr>
+        <tr><td>Termo de fomento (TF)</td><td class="dif">A OSC</td><td>Sim</td></tr>
+        <tr><td>Acordo de cooperação (AC)</td><td>Administração OU OSC</td><td class="dif">Não</td></tr>
+      </tbody>
+    </table>
+    <div class="macete">
+      <span class="pill">CoLaborAdmin</span> <b>C</b>o<b>L</b>aboração vem da administração (o “A” da adm); <b>F</b>omento vem da OSC (a Fonte é o particular); <b>A</b>cordo de cooperação = SEM dinheiro. Os dois “termos” têm $; o “acordo” não tem.
+    </div>
+    <h3>PMIS — Procedimento de Manifestação de Interesse Social (arts. 18-21)</h3>
+    <ul>
+      <li><b>O que é:</b> OSC, movimentos sociais e cidadãos <mark>propõem</mark> ao poder público para que ele avalie a possibilidade de um chamamento público.</li>
+      <li><b>Não obriga:</b> a instauração é <b>discricionária</b> e o PMIS <mark>não implica necessariamente</mark> em chamamento (art. 21).</li>
+      <li><b>Não dispensa:</b> a realização do PMIS <mark>NÃO dispensa o chamamento público</mark> (art. 21, §1º).</li>
+      <li><b>Não impede:</b> quem propôs o PMIS <b>pode participar</b> do chamamento subsequente (art. 21, §2º). É vedado condicionar o chamamento à prévia realização de PMIS (§3º).</li>
+    </ul>
+    <h3>Chamamento público (CP)</h3>
+    <p>Procedimento para <b>selecionar a OSC</b> — <mark>não é licitação nem modalidade licitatória</mark>. Aplica-se em regra a TC e TF. Há hipóteses de <b>dispensa</b> (art. 30 — ex.: urgência de até 180 dias, guerra/calamidade) e de <b>inexigibilidade</b> (art. 31 — inviabilidade de competição).</p>
+    <p class="nota-juris">Vedação de objeto (art. 40): é proibida parceria da Lei 13.019/2014 que delegue, direta ou indiretamente, <b>regulação, fiscalização, poder de polícia ou outras atividades exclusivas de Estado</b>. E a Lei 13.019 <b>não se aplica</b> ao contrato de gestão (OS) nem ao termo de parceria (OSCIP).</p>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Inverte a iniciativa: diz que o <b>termo de colaboração é proposto pela OSC</b> ou que o <b>termo de fomento é proposto pela Administração</b>. Ou afirma que o <b>acordo de cooperação transfere recursos</b>.
+      <div class="correcao"><b>Correto:</b> colaboração = proposta da <b>Administração</b>; fomento = proposta da <b>OSC</b>; acordo de cooperação = <b>SEM</b> transferência de recursos. Errar aqui é o clássico da FGV.</div>
+    </div>
+  </section>
+
+  <section class="secao" id="secao-7">
+    <h2>Entidades de Apoio</h2>
+    <p class="dropcap">São pessoas jurídicas de direito privado, sem fins lucrativos, instituídas por <mark>servidores públicos, porém em nome próprio</mark>, sob a forma de <b>fundação, associação ou cooperativa</b>, para prestar, em caráter privado, serviços sociais não exclusivos do Estado, mantendo vínculo com a Administração (direta ou indireta) <mark>em regra por convênio</mark> (Di Pietro).</p>
+    <ul>
+      <li><b>São paraestatais:</b> não integram a Administração Pública.</li>
+      <li><b>Sem lei geral:</b> não contam com uma lei única que as discipline.</li>
+      <li><b>Exemplo:</b> a <b>fundação de apoio</b> (art. 2º, VII, da Lei 10.973/2004), voltada a apoiar projetos de pesquisa, ensino e extensão de Instituições Científicas e Tecnológicas, disciplinada pela Lei 8.958/94.</li>
+    </ul>
+    <div class="macete">
+      <span class="pill">APOIO = SC</span> <b>S</b>ervidores instituem (em nome próprio) · vínculo por <b>C</b>onvênio · sem lei geral. Lembre: fundação de apoio → universidades/IFES.
+    </div>
+    <div class="banca">
+      <div class="titulo">⚠️ Como a banca derruba:</div>
+      Afirma que as entidades de apoio são <b>instituídas pelo Estado</b> ou que se vinculam por <b>contrato de gestão / termo de parceria</b>.
+      <div class="correcao"><b>Correto:</b> quem institui são os <b>servidores em nome próprio</b> (não o Estado), e o vínculo, em regra, é por <b>convênio</b>. Não há lei geral que as regule.</div>
+    </div>
+  </section>
+
+  <!-- FIM CONTEUDO -->
+
+  <!-- ============ 5. QUADRO COMPARATIVO ============ -->
+  <section id="quadro-comparativo">
+    <div class="badge">📊 Quadro comparativo</div>
+    <p class="intro">A FGV vive de trocar coluna. Fixe estas duas tabelas e você blinda o assunto inteiro.</p>
+    <table class="comp">
+      <caption>OS × OSCIP — o espelho invertido</caption>
+      <thead><tr><th>Critério</th><th>Organização Social (OS)</th><th>OSCIP</th></tr></thead>
+      <tbody>
+        <tr><td>Lei</td><td>9.637/98</td><td>9.790/99</td></tr>
+        <tr><td>Instrumento do vínculo</td><td class="dif">Contrato de gestão</td><td class="dif">Termo de parceria</td></tr>
+        <tr><td>Ato de qualificação</td><td class="dif">Discricionário</td><td class="dif">Vinculado</td></tr>
+        <tr><td>Quem qualifica</td><td>Ministério da área + ato do Presidente</td><td>Ministério da Justiça</td></tr>
+        <tr><td>Tempo prévio de existência</td><td>Não exige</td><td class="dif">Mínimo 3 anos</td></tr>
+        <tr><td>Áreas</td><td>Ensino, pesquisa, tecnologia, meio ambiente, cultura, saúde</td><td>Rol amplo do art. 3º (assistência, cultura, educação, saúde…)</td></tr>
+      </tbody>
+    </table>
+    <table class="comp">
+      <caption>Instrumentos da Lei 13.019/2014 (OSC)</caption>
+      <thead><tr><th>Instrumento</th><th>Iniciativa</th><th>Recursos $</th><th>Efeitos jurídicos</th></tr></thead>
+      <tbody>
+        <tr><td>Termo de colaboração</td><td class="dif">Administração</td><td>Sim</td><td>Só após publicação do extrato</td></tr>
+        <tr><td>Termo de fomento</td><td class="dif">OSC</td><td>Sim</td><td>Só após publicação do extrato</td></tr>
+        <tr><td>Acordo de cooperação</td><td>Adm. ou OSC</td><td class="dif">Não</td><td>Só após publicação do extrato</td></tr>
+      </tbody>
+    </table>
+    <div class="macete">
+      <span class="pill">CG-TP-TC/TF</span> <b>C</b>ontrato de <b>G</b>estão → OS · <b>T</b>ermo de <b>P</b>arceria → OSCIP · <b>T</b>ermos de colaboração/fomento → OSC. Nunca mais troque.
+    </div>
+  </section>
+
+  <!-- ============ 6. REVISÃO RÁPIDA ============ -->
+  <section id="revisao-rapida">
+    <div class="badge">⚡ Revisão rápida</div>
+    <p class="intro">Resumo final — 5 min antes da prova.</p>
+    <div class="revisao">
+      <h3>Conceitos-chave</h3>
+      <ul>
+        <li><b>Terceiro setor:</b> privado, sem fins lucrativos, <mark>fora da Administração</mark>; nasce da publicização.</li>
+        <li><b>Paraestatal:</b> terceiro setor <mark>com vínculo</mark> ao poder público. Vínculo não vira Administração.</li>
+        <li><b>Sistema S:</b> autorização legal + registro civil; custeio parafiscal; prestam contas ao <mark>TCU</mark>; foro estadual; CLT.</li>
+        <li><b>OS:</b> qualificação; <mark>contrato de gestão</mark>; discricionária; entidade pública não estatal.</li>
+        <li><b>OSCIP:</b> qualificação; <mark>termo de parceria</mark>; vinculada; Min. da Justiça; 3 anos.</li>
+        <li><b>OSC (Lei 13.019):</b> termo de colaboração, termo de fomento e acordo de cooperação.</li>
+        <li><b>Entidades de apoio:</b> servidores em nome próprio; convênio; sem lei geral.</li>
+      </ul>
+      <h3>Regras essenciais</h3>
+      <ul>
+        <li><b>OS:</b> princípios do CG = <mark>LIMPEco</mark>; não licitam (regulamento em 90 dias); ADI 1.923.</li>
+        <li><b>OSCIP:</b> regulamento em 30 dias; não se qualifica junto com OS; vedada campanha política.</li>
+        <li><b>OSC:</b> colaboração = Administração propõe; fomento = OSC propõe; acordo = <mark>sem dinheiro</mark>.</li>
+        <li><b>PMIS:</b> não obriga, não dispensa chamamento, não impede participação posterior.</li>
+      </ul>
+      <div class="pegadinhas-foco">
+        <div class="titulo">◎ Pegadinhas-foco & jurisprudência</div>
+        <ul>
+          <li><b>OS = discricionária</b> · <b>OSCIP = vinculada</b>. Trocar isso é a pegadinha nº 1.</li>
+          <li>Contrato de gestão → OS. Termo de parceria → OSCIP. Não misture.</li>
+          <li>CG observa o <b>LIMPEco</b> — <b>sem eficiência</b> e <b>sem supremacia do interesse público</b> (TRT 24ª/2025).</li>
+          <li>Acordo de cooperação <b>NÃO</b> transfere recursos financeiros.</li>
+          <li>Termo de colaboração parte da <b>Administração</b>; termo de fomento parte da <b>OSC</b>.</li>
+          <li>PMIS não dispensa chamamento público (art. 21, §1º).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. ÚLTIMA PASSADA ============ -->
+  <section id="ultima-passada">
+    <div class="badge">🚕 Última passada</div>
+    <p class="intro">Pontos curtos pra você revisar a caminho da prova. Cada um é um item-chave já estudado — ativa a memória sem precisar abrir caderno.</p>
+    <div id="checklist"></div>
+  </section>
+
+  <!-- ============ 8. FIXAÇÃO ============ -->
+  <section id="fixacao">
+    <div class="badge">◎ Fixação</div>
+    <p class="intro">Pra fixar mesmo: responda no padrão Cebraspe. Cada item já vem com explicação do "por que" pós-resposta.</p>
+    <span class="timer" id="timer">⏱ 00:00</span>
+    <div id="quiz"></div>
+    <div class="placar" id="placar"></div>
+    <button class="refazer" onclick="resetQuiz()">↺ Refazer quiz</button>
+  </section>
+
+  <!-- ============ 9. EXPLICA PRA CRIANÇA ============ -->
+  <section id="explica-crianca">
+    <div class="badge">🗣️ Explica pra criança</div>
+    <p class="intro">Se você consegue explicar pra uma criança de 12 anos, você realmente aprendeu. Leia em voz alta, no seu ritmo.</p>
+    <div class="feynman">
+      <ul>
+        <li><b>Existem três "times":</b> imagina que a cidade tem três times. O time do governo (o Estado), o time das lojas que querem ganhar dinheiro (o mercado) e o time das pessoas boas que fazem coisas de graça pra ajudar todo mundo, sem querer lucro. Esse terceiro time é o <b>terceiro setor</b> (as ONGs).</li>
+        <li><b>Paraestatal é "vizinho do governo":</b> é uma dessas pessoas boas que resolveu fazer uma parceria com o governo. Ela não vira funcionária do governo — só fica de mãos dadas com ele pra ajudar (entidade <b>paraestatal</b>).</li>
+        <li><b>Sistema S é a escola dos trabalhadores:</b> pensa no Senai e no Sesc como cursinhos e clubes que ensinam profissão e cuidam das pessoas. O dinheiro sai de uma "vaquinha obrigatória" (contribuições <b>parafiscais</b>), e por isso eles têm que mostrar as contas pra um fiscal chamado <b>TCU</b>.</li>
+        <li><b>OS e o "aperto de mão forte":</b> a Organização Social não nasce com esse nome — ela ganha uma medalha (qualificação) e faz um <b>contrato de gestão</b> com o governo. O governo escolhe quem quer dar a medalha (é <b>discricionário</b>, tipo escolher o amigo do jogo).</li>
+        <li><b>OSCIP é o espelho da OS:</b> aqui o governo NÃO escolhe por gosto — se a entidade cumpriu as regras (e tem 3 anos de vida), o Ministério da Justiça é <b>obrigado</b> a dar a medalha (ato <b>vinculado</b>). E o papel dela se chama <b>termo de parceria</b>, não contrato de gestão.</li>
+        <li><b>Os três papéis da Lei 13.019:</b> se o GOVERNO chama a ONG pra ajudar e manda dinheiro, é <b>termo de colaboração</b>. Se a ONG chama o governo e recebe dinheiro, é <b>termo de fomento</b>. Se ninguém manda dinheiro, é só um <b>acordo de cooperação</b> (combinado sem grana).</li>
+        <li><b>Entidade de apoio:</b> são os próprios funcionários que criam uma fundação pra ajudar a universidade, e o combinado com o governo é um <b>convênio</b>.</li>
+      </ul>
+      <div class="resumo">Se for pra lembrar de uma coisa só, lembra que: <b>OS = contrato de gestão + escolha do governo (discricionário)</b>; <b>OSCIP = termo de parceria + obrigação (vinculado)</b>. Todo o resto gira em torno de "quem propõe" e "se tem dinheiro".</div>
+    </div>
+  </section>
+
+  <!-- ============ 10. CONCLUIR ============ -->
+  <section class="concluir">
+    <p>Marque pra contar como tópico concluído no edital e desbloquear o próximo.</p>
+    <button class="btn-concluir" onclick="this.classList.toggle('feito');this.textContent=this.classList.contains('feito')?'✓ Concluída!':'✓ Marcar como concluída'">✓ Marcar como concluída</button>
+    <div class="assinatura">◆ Bulle Inteligente ◆</div>
+  </section>
+
+</div>
+
+<script>
+/* ===================== BLOCO DE DADOS ===================== */
+
+const NAV = [
+  {id:"como-estudar",       label:"Como estudar"},
+  {id:"secao-1",            label:"Terceiro Setor"},
+  {id:"secao-2",            label:"Paraestatais"},
+  {id:"secao-3",            label:"Sistema S"},
+  {id:"secao-4",            label:"OS"},
+  {id:"secao-5",            label:"OSCIP"},
+  {id:"secao-6",            label:"OSC (13.019)"},
+  {id:"secao-7",            label:"Entidades de apoio"},
+  {id:"quadro-comparativo", label:"Quadro comparativo"},
+  {id:"revisao-rapida",     label:"Revisão rápida"},
+  {id:"ultima-passada",     label:"Última passada"},
+  {id:"fixacao",            label:"Fixação"},
+  {id:"explica-crianca",    label:"Explica pra criança"},
+];
+
+const CHECKLIST = [
+  "1º setor = Estado · 2º = mercado · 3º = sociedade civil sem fins lucrativos.",
+  "Terceiro setor <b>não integra</b> a Administração e <b>não tem fins lucrativos</b>.",
+  "Publicização = transferir do Estado para a sociedade civil atividades sociais.",
+  "Paraestatal = terceiro setor <b>com vínculo</b> ao poder público (vínculo não vira Administração).",
+  "5 espécies: Sistema S, OS, OSCIP, entidades de apoio e OSC.",
+  "Sistema S: <b>autorização legal</b> + registro civil das PJ pra existir.",
+  "Sistema S vive de <b>contribuições parafiscais</b> (natureza tributária) + pode ter verba orçamentária.",
+  "Sistema S presta contas ao <b>TCU</b>; foro na <b>justiça estadual</b>; regime CLT.",
+  "Sistema S: sem concurso, mas <b>processo seletivo</b>; equiparados a func. públicos p/ penal e improbidade.",
+  "\"Novos\" serviços sociais autônomos (Apex, ABDI, Anater): contrato de gestão + presidente pelo Presidente da República.",
+  "OS é <b>qualificação</b>, não tipo de PJ; nenhuma entidade nasce OS.",
+  "OS: vínculo por <b>contrato de gestão</b>; qualificação <b>discricionária</b>.",
+  "Áreas da OS: ensino, pesquisa, tecnologia, meio ambiente, cultura, saúde.",
+  "OS = entidade <b>pública não estatal</b>; declarada de interesse social e utilidade pública.",
+  "Princípios do CG = <b>LIMPEco</b> (sem eficiência, sem supremacia do interesse público).",
+  "OS: regulamento próprio em <b>90 dias</b>; não se submete à Lei 14.133/2021 (ADI 1.923).",
+  "Desqualificação da OS: processo com ampla defesa + reversão de bens; dirigentes respondem solidariamente.",
+  "OSCIP: vínculo por <b>termo de parceria</b>; ato <b>vinculado</b>; Ministério da <b>Justiça</b>.",
+  "OSCIP exige <b>3 anos</b> de funcionamento regular; regulamento em <b>30 dias</b>.",
+  "Não dá pra ser <b>OS e OSCIP</b> ao mesmo tempo; OSCIP é vedada em campanha política.",
+  "OSC (Lei 13.019): colaboração (Adm propõe) · fomento (OSC propõe) · acordo de cooperação (sem $).",
+  "Instrumentos da OSC só produzem efeitos após <b>publicação do extrato</b>.",
+  "PMIS não obriga, não dispensa o chamamento e não impede a OSC de participar depois.",
+  "Chamamento público <b>não é licitação</b>; há dispensa (art. 30) e inexigibilidade (art. 31).",
+  "Vedado à parceria da 13.019 delegar regulação, fiscalização, poder de polícia (atividades exclusivas de Estado).",
+  "Entidades de apoio: criadas por <b>servidores em nome próprio</b>; vínculo por <b>convênio</b>; sem lei geral.",
+];
+
+const QUIZ = [
+  {enun:"As entidades do terceiro setor integram a Administração Pública indireta, em razão do vínculo de colaboração que mantêm com o Estado.", answer:false, exp:"ERRADO. O terceiro setor é privado e <b>não integra</b> a Administração (nem direta nem indireta). O vínculo não transforma a entidade em Administração — apenas a torna paraestatal."},
+  {enun:"Publicização é a transferência, do Estado para a sociedade civil, de atividades de relevância social.", answer:true, exp:"CERTO. É exatamente o fenômeno que dá origem ao terceiro setor."},
+  {enun:"Uma entidade do terceiro setor só é considerada paraestatal quando possui algum vínculo com o poder público.", answer:true, exp:"CERTO. O terceiro setor não é obrigado a ter vínculo; havendo vínculo, passa a ser paraestatal."},
+  {enun:"Os serviços sociais autônomos são criados diretamente pela lei, independentemente de qualquer registro.", answer:false, exp:"ERRADO. A lei <b>autoriza</b>; a criação só se efetiva com o <b>registro do ato constitutivo</b> no registro civil das pessoas jurídicas."},
+  {enun:"Os serviços sociais autônomos são mantidos, entre outras fontes, por contribuições parafiscais de natureza tributária.", answer:true, exp:"CERTO. São as contribuições instituídas no interesse de categorias profissionais/econômicas; podem também receber recursos orçamentários."},
+  {enun:"Por serem entidades privadas, os serviços sociais autônomos não se submetem à fiscalização do Tribunal de Contas da União.", answer:false, exp:"ERRADO. Como manejam recursos de natureza pública, têm <b>dever de prestar contas</b> e se submetem ao <b>TCU</b>."},
+  {enun:"A contratação de pessoal dos serviços sociais autônomos exige aprovação em concurso público.", answer:false, exp:"ERRADO. Não exige concurso; basta <b>processo seletivo</b> simplificado que observe os princípios constitucionais (TCU)."},
+  {enun:"As causas envolvendo serviços sociais autônomos, em regra, são julgadas pela Justiça Estadual.", answer:true, exp:"CERTO. Por serem entidades privadas, não integrantes da Administração, o foro é a <b>justiça estadual</b>."},
+  {enun:"Organização social é uma categoria específica de pessoa jurídica criada pela Lei 9.637/98.", answer:false, exp:"ERRADO. OS é uma <b>qualificação</b> dada a associação ou fundação já existente — nenhuma entidade nasce OS."},
+  {enun:"O vínculo entre o Poder Público e a organização social é formalizado por meio de contrato de gestão.", answer:true, exp:"CERTO. Contrato de gestão é o instrumento da OS (Lei 9.637/98, art. 5º)."},
+  {enun:"A qualificação de uma entidade como organização social é ato vinculado do Poder Público.", answer:false, exp:"ERRADO. A qualificação como OS é <b>discricionária</b> (art. 2º, II). Vinculada é a da OSCIP."},
+  {enun:"As organizações sociais são consideradas entidades públicas não estatais.", answer:true, exp:"CERTO. Públicas porque prestam serviço público e administram patrimônio público; não estatais porque não integram a Administração."},
+  {enun:"Na elaboração do contrato de gestão devem ser observados os princípios da legalidade, impessoalidade, moralidade, publicidade, eficiência e supremacia do interesse público.", answer:false, exp:"ERRADO. O art. 7º traz o <b>LIMPEco</b>: legalidade, impessoalidade, moralidade, publicidade e <b>economicidade</b> — <b>sem</b> eficiência e <b>sem</b> supremacia do interesse público (cobrança do TRT 24ª/2025)."},
+  {enun:"Segundo o STF (ADI 1.923), as organizações sociais estão obrigadas a licitar em suas contratações com terceiros.", answer:false, exp:"ERRADO. O STF entende que as OS <b>não se submetem ao dever de licitar</b>; devem apenas seguir regulamento próprio com regras objetivas e impessoais."},
+  {enun:"As organizações sociais devem publicar regulamento próprio de contratações em até noventa dias da assinatura do contrato de gestão.", answer:true, exp:"CERTO. Art. 17 da Lei 9.637/98 — e por isso não se submetem à Lei 14.133/2021."},
+  {enun:"A desqualificação da organização social independe de processo administrativo e de ampla defesa.", answer:false, exp:"ERRADO. A desqualificação é <b>precedida de processo administrativo</b> com ampla defesa; os dirigentes respondem individual e solidariamente e há reversão de bens (art. 16)."},
+  {enun:"A qualificação como OSCIP é ato vinculado, de competência do Ministério da Justiça.", answer:true, exp:"CERTO. Cumpridos os requisitos, o Ministério da Justiça <b>deve</b> conceder o certificado (arts. 5º e 6º da Lei 9.790/99)."},
+  {enun:"Podem qualificar-se como OSCIP as pessoas jurídicas de direito privado sem fins lucrativos em funcionamento regular há, no mínimo, três anos.", answer:true, exp:"CERTO. Requisito temporal do art. 1º da Lei 9.790/99 (a OS não tem esse prazo)."},
+  {enun:"O vínculo entre o Poder Público e a OSCIP é o contrato de gestão.", answer:false, exp:"ERRADO. O vínculo da OSCIP é o <b>termo de parceria</b>. Contrato de gestão é da OS."},
+  {enun:"É possível que uma mesma entidade seja qualificada, simultaneamente, como organização social e como OSCIP.", answer:false, exp:"ERRADO. Não é possível a dupla qualificação; o prazo transitório do art. 18 da Lei 9.790/99 já se esgotou."},
+  {enun:"O termo de colaboração formaliza parceria proposta pela própria organização da sociedade civil.", answer:false, exp:"ERRADO. O termo de colaboração é proposto pela <b>Administração</b>. Quando a proposta parte da OSC, o instrumento é o <b>termo de fomento</b>."},
+  {enun:"O termo de fomento é o instrumento adequado quando a parceria, com transferência de recursos, é proposta pela organização da sociedade civil.", answer:true, exp:"CERTO. Fomento = iniciativa da OSC + recursos financeiros (art. 2º, VIII, da Lei 13.019/2014)."},
+  {enun:"O acordo de cooperação é o instrumento por meio do qual se formalizam parcerias que envolvam a transferência de recursos financeiros.", answer:false, exp:"ERRADO. O acordo de cooperação é justamente o que <b>NÃO</b> envolve transferência de recursos financeiros (art. 2º, VIII-A)."},
+  {enun:"A realização do Procedimento de Manifestação de Interesse Social não dispensa a convocação por meio de chamamento público para a celebração de parceria.", answer:true, exp:"CERTO. Art. 21, §1º, da Lei 13.019/2014. O PMIS também não obriga a Administração nem impede a OSC de participar do chamamento posterior."},
+  {enun:"O chamamento público previsto na Lei 13.019/2014 constitui modalidade de licitação.", answer:false, exp:"ERRADO. O chamamento público <b>não é licitação nem modalidade licitatória</b> — é procedimento para selecionar a OSC."},
+  {enun:"As entidades de apoio são instituídas por servidores públicos, em nome próprio, e se vinculam à Administração, em regra, por meio de convênio.", answer:true, exp:"CERTO. Conceito de Di Pietro; sob forma de fundação, associação ou cooperativa, e sem lei geral que as discipline."},
+  {enun:"É permitida a celebração de parceria, com base na Lei 13.019/2014, que delegue à OSC o exercício do poder de polícia.", answer:false, exp:"ERRADO. O art. 40 <b>veda</b> parcerias que deleguem regulação, fiscalização, poder de polícia ou outras atividades exclusivas de Estado."},
+];
+
+/* ===================== MOTOR ===================== */
+document.getElementById('navLinks').innerHTML =
+  NAV.map(n=>`<a href="#${n.id}">${n.label}</a>`).join('');
+
+document.getElementById('checklist').innerHTML =
+  CHECKLIST.map((t,i)=>`<div class="card-check"><span class="num">${String(i+1).padStart(2,'0')}</span><span class="txt">${t}</span></div>`).join('');
+
+const quizEl = document.getElementById('placar');
+let respostas = {};
+function renderQuiz(){
+  respostas = {};
+  document.getElementById('quiz').innerHTML = QUIZ.map((q,i)=>`
+    <div class="card-q" id="q${i}">
+      <div class="rot">Questão ${String(i+1).padStart(2,'0')}</div>
+      <div class="enun">${q.enun}</div>
+      <div class="btns">
+        <button onclick="responder(${i},true)">✓ CERTO</button>
+        <button onclick="responder(${i},false)">✗ ERRADO</button>
+      </div>
+      <div class="exp" id="exp${i}">
+        <div class="verdict"></div>
+        <div class="gab">${q.exp}</div>
+      </div>
+    </div>`).join('');
+  document.getElementById('placar').textContent='';
+}
+function responder(i,escolha){
+  if(respostas[i]!==undefined) return;
+  respostas[i]=escolha;
+  const q=QUIZ[i], card=document.getElementById('q'+i);
+  const btns=card.querySelectorAll('button');
+  const acertou = escolha===q.answer;
+  btns.forEach(b=>b.disabled=true);
+  btns[escolha?0:1].classList.add(escolha?'sel-certo':'sel-errado');
+  card.classList.add(acertou?'acertou':'errou');
+  const exp=document.getElementById('exp'+i);
+  exp.querySelector('.verdict').textContent = acertou ? '✓ Você acertou' : '✗ Você errou — gabarito: '+(q.answer?'CERTO':'ERRADO');
+  exp.querySelector('.verdict').style.color = acertou ? 'var(--verde)' : 'var(--vermelho)';
+  exp.classList.add('show');
+  atualizaPlacar();
+}
+function atualizaPlacar(){
+  const total=QUIZ.length, feitas=Object.keys(respostas).length;
+  const acertos=Object.keys(respostas).filter(i=>respostas[i]===QUIZ[i].answer).length;
+  document.getElementById('placar').textContent = feitas===total ? `Você acertou ${acertos} de ${total}.` : `${feitas}/${total} respondidas · ${acertos} certas`;
+}
+function resetQuiz(){ renderQuiz(); }
+renderQuiz();
+
+let seg=0;
+setInterval(()=>{seg++;const m=String(Math.floor(seg/60)).padStart(2,'0'),s=String(seg%60).padStart(2,'0');
+  document.getElementById('timer').textContent=`⏱ ${m}:${s}`;},1000);
+</script>
+</body>
+</html>
