@@ -248,15 +248,14 @@ const AREAS = [
 const DISCIPLINAS = [
   { nome:"Reforma Tributária",     ico:"🔄", area:"tributario", pasta:"reforma-tributaria", assuntos:[] },
   { nome:"Legislação Aduaneira",   ico:"🛃", area:"tributario", pasta:"legislacao-aduaneira", assuntos:[] },
-  { nome:"Legislação Tributária",  ico:"📜", area:"tributario", pasta:"legislacao-tributaria", assuntos:[] },
-  { nome:"Direito Tributário",     ico:"📗", area:"tributario", pasta:"direito-tributario", assuntos:[
-      // ↓↓↓ EXEMPLO — troque pelos seus resumos (ou apague). Mostra os dois botões funcionando:
-      { nome:"Competência Tributária", html:"direito-tributario/competencia-tributaria.html", tec:"https://www.tecconcursos.com.br/" },
-      { nome:"Empréstimo Compulsório e Contribuições Especiais", html:"", tec:"" },
+  { nome:"Legislação Tributária",  ico:"📜", area:"tributario", pasta:"legislacao-tributaria", assuntos:[
+      { nome:"IPI — Fato Gerador e Base de Cálculo", html:"legislacao-tributaria-ipi-fato-gerador-base-calculo-bulle.html", tec:"" },
   ]},
+  { nome:"Direito Tributário",     ico:"📗", area:"tributario", pasta:"direito-tributario", assuntos:[] },
 
   { nome:"Direito Administrativo", ico:"🏛️", area:"direito", pasta:"direito-administrativo", assuntos:[
-      { nome:"Organização Administrativa", html:"", tec:"" },
+      { nome:"Organização Administrativa", html:"direito-administrativo-organizacao-administrativa-bulle.html", tec:"" },
+      { nome:"Terceiro Setor e Entes Paraestatais", html:"direito-administrativo-terceiro-setor-entes-paraestatais.html", tec:"" },
   ]},
   { nome:"Direito Constitucional", ico:"⚖️", area:"direito", pasta:"direito-constitucional", assuntos:[] },
   { nome:"Direito Previdenciário", ico:"👵", area:"direito", pasta:"direito-previdenciario", assuntos:[] },
@@ -267,7 +266,9 @@ const DISCIPLINAS = [
 
   { nome:"Contabilidade",          ico:"🧮", area:"contabil", pasta:"contabilidade", assuntos:[] },
 
-  { nome:"Português",              ico:"✍️", area:"linguas", pasta:"portugues", assuntos:[] },
+  { nome:"Português",              ico:"✍️", area:"linguas", pasta:"portugues", assuntos:[
+      { nome:"Termos da Oração", html:"portugues-aula03-termos-da-oracao.html", tec:"" },
+  ]},
   { nome:"Inglês",                 ico:"🌐", area:"linguas", pasta:"ingles", assuntos:[] },
 
   { nome:"Administração Pública",  ico:"🏢", area:"gestao", pasta:"administracao-publica", assuntos:[] },
